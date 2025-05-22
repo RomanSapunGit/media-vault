@@ -4,6 +4,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="apple-touch-icon" sizes="76x76" href="{{ ASSETS_ROOT }}/img/apple-icon.png">
   <link rel="icon" type="image/png" href="{{ ASSETS_ROOT }}/img/icons/favicon.png">
   <link rel="canonical" href="https://appseed.us/ui-kit/soft-ui-design-system"/>
   
@@ -26,15 +27,10 @@
   {% block stylesheets %}{% endblock stylesheets %}
 
 </head>
-
 <body class="{% block body_class %}{% endblock body_class %}">
-
-    {% include "includes/navigation.html" %}
 
     {% block content %}{% endblock content %}
   
-    {% include "includes/footer.html" %}
-
     {% include "includes/scripts.html" %}
 
   <!-- Specific JS goes HERE --> 
