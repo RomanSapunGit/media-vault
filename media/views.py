@@ -8,6 +8,6 @@ from django.shortcuts import render
 def index(request: HttpRequest) -> HttpResponse:
     media_users_count = get_user_model().objects.count()
     context = {
-        "media_users": media_users_count
+        "media_users_count": media_users_count
     }
     return render(request, "home/index.html", context)
