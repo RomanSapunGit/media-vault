@@ -7,4 +7,5 @@ urlpatterns = [
     path("", include("media.urls", namespace="media")),
     path("auth/", include("authentication.urls", namespace="authentication")),
     path("admin/", admin.site.urls),
+    path("account/", include("django.contrib.auth.urls")),
 ] + debug_toolbar_urls()
