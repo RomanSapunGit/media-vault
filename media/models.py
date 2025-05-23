@@ -66,11 +66,13 @@ class UserMediaRating(models.Model):
     )
     review = models.CharField(max_length=255)
     status = models.CharField(max_length=255, choices=CHOICES_DICT)
+    is_hidden = models.BooleanField()
 
     class Meta:
         constraints = [
             UniqueConstraint(name="unique_reviews", fields=("user", "media"))
         ]
+        db_table = "user_media_rating"
 
 
 class Film(Media):
