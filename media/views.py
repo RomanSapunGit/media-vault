@@ -47,3 +47,11 @@ class GenreListView(generic.ListView):
         context["media"] = media_name
         return context
 
+    def get_queryset(self):
+        queryset = Genre.objects.all()
+        form = GenreSearchForm(self.request.GET)
+        if form.is_valid():
+            return queryset.filter(
+                name__icontains=form.cleaned_data["name"]
+            )
+        return queryset
