@@ -39,6 +39,42 @@
 @media (prefers-reduced-motion: no-preference) {
   :root {
     scroll-behavior: smooth; } }
+  .search-container {
+    max-width: 400px;
+    margin: 50px auto;
+  }
+
+  .search {
+    display: flex;
+    border: 1px solid #ccc;
+    border-radius: 25px;
+    overflow: hidden;
+    background: #fff;
+  }
+
+  .search input[type="text"] {
+    flex: 1;
+    border: none;
+    padding: 10px 15px;
+    outline: none;
+    font-size: 16px;
+  }
+
+  .search button {
+    background: none;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    color: #555;
+  }
+
+  .search button:hover {
+    color: #000;
+  }
+
+  .search i.fa-search {
+    font-size: 18px;
+  }
 
 body {
   margin: 0;
@@ -53,6 +89,8 @@ body {
 
 [tabindex="-1"]:focus:not(:focus-visible) {
   outline: 0 !important; }
+
+
 
 hr {
   margin: 1rem 0;
@@ -10094,8 +10132,8 @@ p {
   padding-right: 16rem !important; }
 
 .py-6 {
-  padding-top: 4rem !important;
-  padding-bottom: 4rem !important; }
+  padding-top: 6rem !important;
+  padding-bottom: 2rem !important; }
 
 .py-7 {
   padding-top: 6rem !important;
