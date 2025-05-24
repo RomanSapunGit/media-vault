@@ -3,27 +3,11 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.db.models import UniqueConstraint
 
-CHOICES_DICT = {
-    "F": "Finished",
-    "IP": "In progress",
-    "D": "Dropped"
-}
 
-BOOK_CHOICES = {
-    "TB": "Traditional book",
-    "LN": "Light novel",
-    "WN": "Web novel",
-    "CS": "Comics",
-    "MA": "Manga",
-    "FF": "Fan fiction"
-}
-
-SERIES_CHOICES = {
-    "SO": "Spin-off",
-    "AY": "Anthology",
-    "AD": "Adaptation"
-}
-
+class StatusChoices(models.TextChoices):
+    FINISHED = "F", "Finished"
+    IN_PROGRESS = "IP", "In progress"
+    DROPPED = "D", "Dropped"
 
 class Creator(models.Model):
     first_name = models.CharField(max_length=255)
@@ -47,10 +31,11 @@ class MediaUser(AbstractUser):
 
 class Media(models.Model):
     title = models.CharField(max_length=255)
-    description = models.CharField(max_length=255)
+    description = models.TextField()
     created_at = models.DateField(null=True, blank=True)
     creators = models.ManyToManyField(Creator, related_name="media")
-    users = models.ManyToManyField(MediaUser, through='UserMediaRating')
+    users = models.ManyToManyField(MediaUser, through='UserMediaRating', related_name="rated_media")
+    genres = models.ManyToManyField(Genre, related_name="media")
 
     class Meta:
         ordering = ("title",)
@@ -64,8 +49,8 @@ class UserMediaRating(models.Model):
         decimal_places=1,
         validators=[MinValueValidator(0.0), MaxValueValidator(10.0)]
     )
-    review = models.CharField(max_length=255)
-    status = models.CharField(max_length=255, choices=CHOICES_DICT)
+    review = models.CharField(max_length=255, null=True, blank=True)
+    status = models.CharField(max_length=255, choices=StatusChoices.choices)
     is_hidden = models.BooleanField()
 
     class Meta:
@@ -81,13 +66,25 @@ class Film(Media):
 
 
 class Book(Media):
-    chapters = models.IntegerField()
-    type = models.CharField(max_length=65, choices=BOOK_CHOICES)
+    class BookTypeChoices(models.TextChoices):
+        TRADITIONAL = "TB", "Traditional book"
+        LIGHT_NOVEL = "LN", "Light novel"
+        WEB_NOVEL = "WN", "Web novel"
+        COMICS = "CS", "Comics"
+        MANGA = "MA", "Manga"
+        FAN_FICTION = "FF", "Fan fiction"
+    chapters = models.PositiveSmallIntegerField()
+    type = models.CharField(max_length=65, choices=BookTypeChoices.choices)
 
 
 class Series(Media):
+    class SeriesChoices(models.TextChoices):
+        SPIN_OFF = "SO", "Spin-off",
+        ANTHOLOGY = "AY", "Anthology",
+        ADAPTATION = "AD", "Adaptation"
+        ANIME = "AE", "Anime"
     country = models.CharField(max_length=255)
-    status = models.CharField(max_length=255, choices=CHOICES_DICT)
-    seasons = models.IntegerField()
-    series_number = models.IntegerField()
-    type = models.CharField(max_length=65, choices=SERIES_CHOICES)
+    status = models.CharField(max_length=255, choices=StatusChoices.choices)
+    seasons = models.PositiveSmallIntegerField()
+    series_number = models.PositiveIntegerField()
+    type = models.CharField(max_length=65, choices=SeriesChoices.choices)
