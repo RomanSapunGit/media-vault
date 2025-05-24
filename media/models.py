@@ -49,7 +49,7 @@ class UserMediaRating(models.Model):
         decimal_places=1,
         validators=[MinValueValidator(0.0), MaxValueValidator(10.0)]
     )
-    review = models.CharField(max_length=255, null=True, blank=True)
+    review = models.TextField(null=True, blank=True)
     status = models.CharField(max_length=255, choices=StatusChoices.choices)
     is_hidden = models.BooleanField()
 
