@@ -1,11 +1,14 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-{% load query_transform %}
-
 <div class="search-container">
   <form method="get" action="" class="search">
     {{ search_form.name }}
-    <input type="hidden" name="title" value="{% if title %}{{ title }}{% endif %}"/>
+    {% if media %}
+      <input type="hidden" name="media" value="{{ media }}"/>
+    {% endif %}
+    {% if is_paginated %}
+      <input type="hidden" name="page" value="1"/>
+    {% endif %}
     <button type="submit">
       <i class="fa fa-search"></i>
     </button>
