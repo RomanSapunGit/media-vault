@@ -3,8 +3,6 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
 from django.urls import reverse
-from django.template.defaultfilters import title
-from django.utils.http import urlencode
 from django.views import generic
 
 from media.forms import GenreSearchForm
@@ -26,11 +24,9 @@ class GenreListView(generic.ListView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(object_list=object_list, **kwargs)
-        context["search_form"] = GenreSearchForm(
-            initial={"title": title}
-        )
+        context["search_form"] = GenreSearchForm(self.request.GET)
 
-        titles_dict = {
+        media_dict = {
             "book": reverse("media:book_list"),
             "film": reverse("media:film_list"),
             "comic": reverse("media:comic_list"),
@@ -38,14 +34,16 @@ class GenreListView(generic.ListView):
             "anime": reverse("media:anime_list")
         }
 
-        if "title" in self.request.GET and self.request.GET["title"] in titles_dict:
-            title_name = self.request.GET["title"]
-            self.request.session["genre_title"] = title_name
-        elif "genre_title" in self.request.session.keys() and self.request.GET["title"] in titles_dict:
-            title_name = self.request.session["genre_title"]
+        if "media" in self.request.GET:
+            media_query = self.request.GET["media"]
+            media_name = media_query if media_query in media_dict else "book"
+            self.request.session["genre_media"] = media_name
+        elif "genre_media" in self.request.session.keys():
+            media_name = self.request.session["genre_media"]
         else:
-            title_name = "book"
+            media_name = "book"
 
-        context["redirect_url"] = titles_dict[title_name]
-        context["title"] = title_name
+        context["redirect_url"] = media_dict[media_name]
+        context["media"] = media_name
         return context
+
