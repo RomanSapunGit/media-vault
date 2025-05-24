@@ -1,16 +1,13 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-<section>
-  <div class="container col-md-9">
-    <div class="row justify-space-between py-2">
-      <div class="col-lg-4 mx-auto d-inline-block">
-        <form method="get" action="" class="d-flex">
-          {{ search_form }}
-          <button type="submit">
-            <i class="fa fa-search"></i>
-          </button>
-        </form>
-      </div>
-    </div>
-  </div>
-</section>
+{% load query_transform %}
+
+<div class="search-container">
+  <form method="get" action="" class="search">
+    {{ search_form.name }}
+    <input type="hidden" name="title" value="{% if title %}{{ title }}{% endif %}"/>
+    <button type="submit">
+      <i class="fa fa-search"></i>
+    </button>
+  </form>
+</div>
