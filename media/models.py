@@ -9,6 +9,7 @@ class StatusChoices(models.TextChoices):
     IN_PROGRESS = "IP", "In progress"
     DROPPED = "D", "Dropped"
 
+
 class Creator(models.Model):
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
@@ -34,7 +35,10 @@ class Media(models.Model):
     description = models.TextField()
     created_at = models.DateField(null=True, blank=True)
     creators = models.ManyToManyField(Creator, related_name="media")
-    users = models.ManyToManyField(MediaUser, through='UserMediaRating', related_name="rated_media")
+    users = models.ManyToManyField(
+        MediaUser,
+        through='UserMediaRating',
+        related_name="rated_media")
     genres = models.ManyToManyField(Genre, related_name="media")
 
     class Meta:
@@ -73,6 +77,7 @@ class Book(Media):
         COMICS = "CS", "Comics"
         MANGA = "MA", "Manga"
         FAN_FICTION = "FF", "Fan fiction"
+
     chapters = models.PositiveSmallIntegerField()
     type = models.CharField(max_length=65, choices=BookTypeChoices.choices)
 
@@ -83,6 +88,7 @@ class Series(Media):
         ANTHOLOGY = "AY", "Anthology",
         ADAPTATION = "AD", "Adaptation"
         ANIME = "AE", "Anime"
+
     country = models.CharField(max_length=255)
     status = models.CharField(max_length=255, choices=StatusChoices.choices)
     seasons = models.PositiveSmallIntegerField()
