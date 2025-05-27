@@ -50,7 +50,3 @@ class MediaMutateForm(forms.ModelForm):
         if not genres:
             raise forms.ValidationError("You must select at least one genre.")
         return genres
-
-
-class BookTypeForm(forms.Form):
-    type = forms.CharField()
