@@ -1,13 +1,10 @@
-{% extends 'layouts/base-presentation.html' %}
+{% extends 'layouts/base-list.html' %}
 
 {% block title %}
   genre list
 {% endblock %}
 
-{% block content %}
-  <div class="pt-7 pb-2">
-  {% include 'includes/search.html' %}
-  </div>
+{% block list_content %}
 
 {% include 'includes/media-nav-buttons.html' %}
 
@@ -26,8 +23,6 @@
           </li>
         </ul>
       </div>
-
-      {% include 'includes/pagination.html' %}
 
     {% endfor %}
   {% else %}
