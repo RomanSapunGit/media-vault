@@ -2,9 +2,12 @@
 
 <div class="search-container">
   <form method="get" action="" class="search">
-    {{ search_form.name }}
-    {% if media %}
-      <input type="hidden" name="media" value="{{ media }}"/>
+
+    {% if search_form.name %}
+      {{ search_form.name }}
+    {% else %}
+      {{ search_form.title }}
+
     {% endif %}
 
     {% for key,value in query_params.items %}
