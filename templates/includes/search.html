@@ -6,9 +6,13 @@
     {% if media %}
       <input type="hidden" name="media" value="{{ media }}"/>
     {% endif %}
-    {% if is_paginated %}
-      <input type="hidden" name="page" value="1"/>
-    {% endif %}
+
+    {% for key,value in query_params.items %}
+      {% if "title" != key and "name" != key %}
+        <input type="hidden" name="{{ key }}" value="{{ value }}"/>
+      {% endif %}
+    {% endfor %}
+
     <button type="submit">
       <i class="fa fa-search"></i>
     </button>
