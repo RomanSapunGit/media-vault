@@ -1,0 +1,31 @@
+{% load query_transform %}
+
+
+  <section>
+    <div class="pt-3 pb-4 container">
+      <div class="row">
+        <div class="mx-auto">
+          <div class="nav-wrapper position-relative end-0">
+            <ul class="nav nav-pills nav-fill p-1" role="tablist">
+              <li class="nav-item">
+                <form method="get" action="">
+                  {{ genre_filter_form }}
+
+                  {% for key,value in query_params.items %}
+                    {% if "genres" != key %}
+                      <input type="hidden" name="{{ key }}" value="{{ value }}"/>
+                    {% endif %}
+                  {% endfor %}
+
+                <div class="py-3">
+                  <button class="btn btn btn-primary" type="submit">Submit</button>
+                </div>
+
+                </form>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
