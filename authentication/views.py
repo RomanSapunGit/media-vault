@@ -29,7 +29,9 @@ def register_user(request):
         form = SignUpForm()
 
     return render(
-        request, "account/register.html", {"form": form, "msg": msg, "success": success}
+        request,
+        "account/register.html",
+        {"form": form, "msg": msg, "success": success}
     )
 
 
