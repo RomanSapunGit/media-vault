@@ -56,10 +56,11 @@
 
               {% if book.creators.exists %}
                 <div class="mb-2">
-                  <strong>By:</strong>
+                  <strong>Author{{ book.creators.all|length|pluralize }}:</strong>
                   {% for creator in book.creators.all %}
                     <span class="badge bg-light border text-dark me-1">
                   {{ creator.first_name }}
+                    {{ creator.last_name }}
                 </span>
                   {% endfor %}
                 </div>
