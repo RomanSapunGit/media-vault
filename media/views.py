@@ -1,7 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db.models import Prefetch
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
 from django.urls import reverse, reverse_lazy
@@ -12,7 +11,7 @@ from media.forms import (
     MediaSearchForm,
     GenreFilterForm,
 )
-from media.models import Genre, Book, Creator
+from media.models import Genre, Book
 from media.utils import get_reverse_choice
 
 
@@ -121,4 +120,11 @@ class BookDetailView(generic.DetailView):
             args=[context["book"].id]
         )
         return context
+
+
+class BookDeleteView(generic.DeleteView):
+    model = Book
+    success_url = reverse_lazy("media:book_list")
+
+
 
