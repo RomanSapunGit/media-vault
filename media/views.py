@@ -4,15 +4,15 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Prefetch
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.views import generic
 
 from media.forms import (
     GenreSearchForm,
     MediaSearchForm,
-    GenreFilterForm
+    GenreFilterForm,
 )
-from media.models import Genre, Book
+from media.models import Genre, Book, Creator
 from media.utils import get_reverse_choice
 
 
@@ -107,3 +107,18 @@ class BookListView(LoginRequiredMixin, generic.ListView):
                 genres__name__in=genres_form.cleaned_data["genres"]
             )
         return queryset
+
+
+class BookDetailView(generic.DetailView):
+    model = Book
+    template_name = "media/detail/book-detail.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["media_type"] = "book"
+        context["delete_url"] = reverse_lazy(
+            "media:book_delete",
+            args=[context["book"].id]
+        )
+        return context
+
