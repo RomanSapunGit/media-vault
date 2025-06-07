@@ -38,7 +38,15 @@ class MediaUser(AbstractUser):
 
 class Media(models.Model):
     title = models.CharField(max_length=255)
-    description = models.TextField()
+    description = models.TextField(
+        validators=[MinLengthValidator(
+            50,
+            "Description must be at least 150 symbols"),
+            MaxLengthValidator(
+                4000,
+                "Description must be less than 4000 symbols"
+            )]
+    )
     created_at = models.DateField(null=True, blank=True)
     creators = models.ManyToManyField(Creator, related_name="media")
     users = models.ManyToManyField(
