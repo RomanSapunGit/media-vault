@@ -127,4 +127,8 @@ class BookDeleteView(generic.DeleteView):
     success_url = reverse_lazy("media:book_list")
 
 
-
+class BookCreateView(generic.CreateView):
+    model = Book
+    fields = "__all__"
+    template_name = "media/form/media-form.html"
+    success_url = reverse_lazy("media:book_list")
