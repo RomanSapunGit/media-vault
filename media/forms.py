@@ -38,15 +38,3 @@ class GenreFilterForm(forms.Form):
         ),
         choices=[(genre.name, genre.name) for genre in Genre.objects.all()]
     )
-
-
-class MediaMutateForm(forms.ModelForm):
-    class Meta:
-        model = Media
-        fields = "__all__"
-
-    def clean_genres(self):
-        genres = self.cleaned_data.get("genres")
-        if not genres:
-            raise forms.ValidationError("You must select at least one genre.")
-        return genres
