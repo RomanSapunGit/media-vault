@@ -10,6 +10,7 @@ urlpatterns = [
     path("books/", BookListView.as_view(), name="book_list"),
     path("books/<int:pk>/", BookDetailView.as_view(), name="book_detail"),
     path("books/<int:pk>/delete/", BookDeleteView.as_view(), name="book_delete"),
+    path("books/create/", BookCreateView.as_view(), name="book_create"),
     path("comics/", GenreListView.as_view(), name="comic_list"),
     path("series/", GenreListView.as_view(), name="series_list"),
     path("films/", GenreListView.as_view(), name="film_list"),
