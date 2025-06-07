@@ -36,7 +36,9 @@
         <div class="col-md-6 col-lg-4">
           <div class="card shadow-sm h-100">
             <div class="card-body d-flex flex-column">
-              <a href="{% url 'media:book_detail' pk=book.id %}" class="h5 card-title text-primary">{{ book.title }}</a>
+                <a href="{% url 'media:book_detail' pk=book.id %}" class="h5 card-title text-primary">
+                  {{ book.title }}
+                </a>
 
               <p class="card-text text-muted small">
                 {{ book.description|truncatechars:200 }}
