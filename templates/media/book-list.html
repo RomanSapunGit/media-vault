@@ -24,8 +24,11 @@
           {% include 'includes/genre-nav-buttons.html' %}
         </div>
       </div>
-    </div>
-  </div>
+
+    <a href="{% url 'media:book_create' %}" class="btn btn-outline-secondary mb-auto mx-2">
+      Create
+    </a>
+</div>
 
   <div class="row g-4 justify-content-center">
     {% if book_list %}
