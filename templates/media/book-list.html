@@ -73,7 +73,7 @@
 
               {% if book.genres.exists %}
                 <div class="d-flex flex-wrap gap-1 mt-auto">
-                  {% for genre in book.genres.all %}
+                  {% for genre in book.genres.all|slice:":5" %}
                     <a class="badge rounded-pill bg-success text-white text-decoration-none"
                        href="?{% query_transform request=request genres=genre.name %}">
                       {{ genre.name }}
