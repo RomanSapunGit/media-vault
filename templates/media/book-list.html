@@ -69,6 +69,10 @@
                 </span>
                   {% endfor %}
                 </div>
+                {% else %}
+                <div class="mb-2">
+                  <strong>Author unknown</strong>
+                </div>
               {% endif %}
 
               {% if book.genres.exists %}
