@@ -51,7 +51,11 @@ class Media(models.Model):
         ]
     )
     created_at = models.DateField(null=True, blank=True)
-    creators = models.ManyToManyField(Creator, related_name="media", blank=True)
+    creators = models.ManyToManyField(
+        Creator,
+        related_name="media",
+        blank=True
+    )
     users = models.ManyToManyField(
         MediaUser,
         through='UserMediaRating',
