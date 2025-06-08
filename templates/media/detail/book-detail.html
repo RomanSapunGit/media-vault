@@ -18,7 +18,9 @@
             <div class="ms-auto">
 
               <button class="btn btn-outline-dark mb-0">
-                Update
+                <a href="{% url 'media:book_update' pk=book.id %}">
+                  Update
+                </a>
               </button>
 
               <button
