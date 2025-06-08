@@ -9,7 +9,11 @@ urlpatterns = [
     path("genres/", GenreListView.as_view(), name="genre_list"),
     path("books/", BookListView.as_view(), name="book_list"),
     path("books/<int:pk>/", BookDetailView.as_view(), name="book_detail"),
-    path("books/<int:pk>/delete/", BookDeleteView.as_view(), name="book_delete"),
+    path(
+        "books/<int:pk>/delete/",
+        BookDeleteView.as_view(),
+        name="book_delete"
+    ),
     path("books/create/", BookCreateView.as_view(), name="book_create"),
     path("comics/", GenreListView.as_view(), name="comic_list"),
     path("series/", GenreListView.as_view(), name="series_list"),
