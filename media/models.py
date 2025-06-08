@@ -39,9 +39,11 @@ class MediaUser(AbstractUser):
 class Media(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField(
-        validators=[MinLengthValidator(
-            50,
-            "Description must be at least 150 symbols"),
+        validators=[
+            MinLengthValidator(
+                50,
+                "Description must be at least 50 symbols"
+            ),
             MaxLengthValidator(
                 4000,
                 "Description must be less than 4000 symbols"
