@@ -72,7 +72,9 @@ class UserMediaRating(models.Model):
     rating = models.DecimalField(
         max_digits=3,
         decimal_places=1,
-        validators=[MinValueValidator(0.0), MaxValueValidator(10.0)]
+        validators=[MinValueValidator(0.0), MaxValueValidator(10.0)],
+        null=True,
+        blank=True
     )
     review = models.TextField(null=True, blank=True)
     status = models.CharField(max_length=255, choices=StatusChoices.choices)
