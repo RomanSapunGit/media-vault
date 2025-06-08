@@ -14,6 +14,11 @@ urlpatterns = [
         BookDeleteView.as_view(),
         name="book_delete"
     ),
+    path(
+        "books/<int:pk>/update/",
+        BookUpdateView.as_view(),
+        name="book_update"
+    ),
     path("books/create/", BookCreateView.as_view(), name="book_create"),
     path("comics/", GenreListView.as_view(), name="comic_list"),
     path("series/", GenreListView.as_view(), name="series_list"),
