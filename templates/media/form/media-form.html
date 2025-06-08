@@ -1,9 +1,43 @@
 {% extends 'layouts/base-presentation.html' %}
 
 {% block content %}
-  <form class="my-5"  method="post" novalidate>
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Submit</button>
-  </form>
+  <section>
+    <div class="mt-7 page-header section-height-100">
+      <div class="container">
+        <div class="row">
+          <div class="col-xl-4 col-lg-5 col-md-7 d-flex flex-column mx-lg-0 mx-auto">
+            <div class="card card-plain">
+              <div class="card-body">
+              <strong>
+                {% if object %}
+                  Update {{ media_name }}
+                {% else %}
+                  Create {{ media_name }}
+                {% endif %}
+              </strong>
+                <form method="post" action="" role="form">
+
+                  {% csrf_token %}
+                  {{ form.as_p }}
+
+
+                  <div class="text-center">
+                    <button type="submit" name="login"
+                            class="btn btn-lg bg-gradient-primary btn-lg w-100 mt-4 mb-0">
+                      {% if object %}
+                        Update {{ media_name }}
+                      {% else %}
+                        Create {{ media_name }}
+                      {% endif %}
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
 {% endblock %}
