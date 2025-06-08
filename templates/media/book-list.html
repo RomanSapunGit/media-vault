@@ -16,7 +16,7 @@
                   data-bs-target="#filterCollapse"
                   aria-expanded="false"
                   aria-controls="filterCollapse">
-            Type Filters
+            Filters
           </button>
           <div id="filterCollapse" class="collapse">
             {% include 'includes/type-nav-buttons.html' %}
@@ -35,9 +35,11 @@
         <div class="col-md-6 col-lg-4">
           <div class="card shadow-sm h-100">
             <div class="card-body d-flex flex-column">
-                <a href="{% url 'media:book_detail' pk=book.id %}" class="h5 card-title text-primary">
+            <h5>
+              <a class="h5 card-title text-primary" href="{% url 'media:book_detail' pk=book.id %}">
                   {{ book.title }}
                 </a>
+            </h5>
 
               <p class="card-text text-muted small">
                 {{ book.description|truncatechars:200 }}
