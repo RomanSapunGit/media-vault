@@ -1,6 +1,6 @@
 from django import forms
 
-from media.models import Media, Genre
+from media.models import Genre, Book, Creator
 
 
 class GenreSearchForm(forms.Form):
@@ -38,3 +38,35 @@ class GenreFilterForm(forms.Form):
         ),
         choices=[(genre.name, genre.name) for genre in Genre.objects.all()]
     )
+
+
+class BookForm(forms.ModelForm):
+    creators = forms.ModelMultipleChoiceField(
+        queryset=Creator.objects.all(),
+        required=False,
+        widget=forms.CheckboxSelectMultiple()
+    )
+
+    genres = forms.ModelMultipleChoiceField(
+        queryset=Genre.objects.all(),
+        widget=forms.CheckboxSelectMultiple()
+    )
+
+    class Meta:
+        model = Book
+        fields = [
+            "title",
+            "description",
+            "created_at",
+            "creators",
+            "genres",
+            "chapters",
+            "type",
+        ]
+        widgets = {
+            "title": forms.TextInput(attrs={"class": "form-control"}),
+            "description": forms.Textarea(attrs={"class": "form-control"}),
+            "created_at": forms.DateInput(attrs={"class": "form-control", "type": "date"}),
+            "chapters": forms.NumberInput(attrs={"class": "form-control"}),
+            "type": forms.Select(attrs={"class": "form-control"}),
+        }
