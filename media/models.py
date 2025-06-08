@@ -47,7 +47,8 @@ class Media(models.Model):
             MaxLengthValidator(
                 4000,
                 "Description must be less than 4000 symbols"
-            )]
+            )
+        ]
     )
     created_at = models.DateField(null=True, blank=True)
     creators = models.ManyToManyField(Creator, related_name="media", blank=True)
