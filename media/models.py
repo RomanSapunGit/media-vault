@@ -77,8 +77,13 @@ class UserMediaRating(models.Model):
         blank=True
     )
     review = models.TextField(null=True, blank=True)
-    status = models.CharField(max_length=255, choices=StatusChoices.choices)
-    is_hidden = models.BooleanField()
+    status = models.CharField(
+        max_length=255,
+        choices=StatusChoices.choices,
+        null=True,
+        blank=True
+    )
+    is_hidden = models.BooleanField(default=False)
 
     class Meta:
         constraints = [
