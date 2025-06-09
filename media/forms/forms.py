@@ -41,18 +41,6 @@ class GenreFilterForm(forms.Form):
     )
 
 
-class BookForm(forms.ModelForm):
-    creators = forms.ModelMultipleChoiceField(
-        queryset=Creator.objects.all(),
-        required=False,
-        widget=forms.CheckboxSelectMultiple()
-    )
-
-    genres = forms.ModelMultipleChoiceField(
-        queryset=Genre.objects.all(),
-        widget=forms.CheckboxSelectMultiple()
-    )
-
 class BookForm(MediaFormMixin):
     class Meta:
         model = Book
