@@ -63,3 +63,21 @@ class MediaListMixin:
         queryset = super().get_queryset()
         search_form = MediaSearchForm(self.request.GET)
 
+        if search_form.is_valid():
+            queryset = queryset.filter(
+                title__icontains=search_form.cleaned_data["title"]
+            )
+
+        type_choice = self.request.GET.get("type")
+        db_stored_choice = get_reverse_choice(type_choice, Book.type)
+        if db_stored_choice:
+            queryset = queryset.filter(
+                type=db_stored_choice
+            )
+
+        genres_form = GenreFilterForm(self.request.GET)
+        if genres_form.is_valid():
+            queryset = queryset.filter(
+                genres__name__in=genres_form.cleaned_data["genres"]
+            )
+        return queryset
