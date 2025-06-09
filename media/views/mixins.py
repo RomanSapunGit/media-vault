@@ -1,5 +1,6 @@
-from media.forms import BookForm
-from media.models import Book
+from media.forms.forms import BookForm, FilmForm, GenreFilterForm, MediaSearchForm
+from media.models import Book, Film, Genre
+from media.utils import get_reverse_choice
 
 
 class BookMutateMixin:
@@ -10,17 +11,21 @@ class BookMutateMixin:
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         db_type = get_reverse_choice(self.request.GET.get("type", None), Book.type)
-        genre_ids = []
-        if "genres" in self.request.GET:
-            genre_ids = Genre.objects.filter(
-                name__in=self.request.GET.getlist("genres")
-            ).values_list("id", flat=True)
-        query_param_dict = {"type": db_type, "genres": genre_ids}
+        if not self.object:
+            genre_ids = []
+            if "genres" in self.request.GET:
+                genre_ids = Genre.objects.filter(
+                    name__in=self.request.GET.getlist("genres")
+                ).values_list("id", flat=True)
+            query_param_dict = {"type": db_type, "genres": genre_ids}
 
+            context["form"] = BookForm(initial=query_param_dict)
         context["media_name"] = "book"
+        context["params"] = self.request.GET.copy()
         return context
 
     def form_valid(self, form):
+        response = super().form_valid(form)
         self.object.users.add(self.request.user)
         return response
 
@@ -33,12 +38,13 @@ class FilmMutateMixin:
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         genre_ids = []
-        if "genres" in self.request.GET:
-            genre_ids = Genre.objects.filter(
-                name__in=self.request.GET.getlist("genres")
-            ).values_list("id", flat=True)
+        if not self.object:
+            if "genres" in self.request.GET:
+                genre_ids = Genre.objects.filter(
+                    name__in=self.request.GET.getlist("genres")
+                ).values_list("id", flat=True)
 
-        context["form"] = FilmForm(initial={"genres": genre_ids})
+            context["form"] = FilmForm(initial={"genres": genre_ids})
         context["media_name"] = "film"
         return context
 
