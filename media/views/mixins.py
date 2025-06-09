@@ -48,4 +48,18 @@ class FilmMutateMixin:
         return response
 
 
+class MediaListMixin:
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(object_list=object_list, **kwargs)
+        context["query_params"] = self.request.GET.copy()
+        if "genres" in self.request.GET:
+            context["genre_filter_form"] = GenreFilterForm(self.request.GET)
+        else:
+            context["genre_filter_form"] = GenreFilterForm()
+        context["search_form"] = MediaSearchForm(self.request.GET)
+        return context
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        search_form = MediaSearchForm(self.request.GET)
 
