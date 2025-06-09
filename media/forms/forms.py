@@ -53,6 +53,7 @@ class BookForm(forms.ModelForm):
         widget=forms.CheckboxSelectMultiple()
     )
 
+class BookForm(MediaFormMixin):
     class Meta:
         model = Book
         fields = [
