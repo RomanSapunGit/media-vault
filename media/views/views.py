@@ -6,14 +6,11 @@ from django.shortcuts import render
 from django.urls import reverse, reverse_lazy
 from django.views import generic
 
-from media.forms import (
+from media.forms.forms import (
     GenreSearchForm,
-    MediaSearchForm,
-    GenreFilterForm, BookForm,
 )
-from media.models import Genre, Book
-from media.utils import get_reverse_choice
-from media.views.mixins import BookMutateMixin
+from media.models import Genre, Book, Film
+from media.views.mixins import BookMutateMixin, FilmMutateMixin, MediaListMixin
 
 
 @login_required()
@@ -66,50 +63,21 @@ class GenreListView(LoginRequiredMixin, generic.ListView):
         return queryset
 
 
-class BookListView(LoginRequiredMixin, generic.ListView):
+class BookListView(LoginRequiredMixin, MediaListMixin, generic.ListView):
     model = Book
     paginate_by = 10
     template_name = "media/book-list.html"
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(object_list=object_list, **kwargs)
-        context["query_params"] = self.request.GET.copy()
         context["type_choices"] = [
             choice_type[1]
             for choice_type in Book.type.field.choices
         ]
-        if "genres" in self.request.GET:
-            context["genre_filter_form"] = GenreFilterForm(self.request.GET)
-        else:
-            context["genre_filter_form"] = GenreFilterForm()
-        context["search_form"] = MediaSearchForm(self.request.GET)
         return context
 
-    def get_queryset(self):
-        queryset = Book.objects.all().prefetch_related("creators", "genres")
-        search_form = MediaSearchForm(self.request.GET)
 
-        if search_form.is_valid():
-            queryset = queryset.filter(
-                title__icontains=search_form.cleaned_data["title"]
-            )
-
-        type_choice = self.request.GET.get("type")
-        db_stored_choice = get_reverse_choice(type_choice, Book.type)
-        if db_stored_choice:
-            queryset = queryset.filter(
-                type=db_stored_choice
-            )
-
-        genres_form = GenreFilterForm(self.request.GET)
-        if genres_form.is_valid():
-            queryset = queryset.filter(
-                genres__name__in=genres_form.cleaned_data["genres"]
-            )
-        return queryset
-
-
-class BookDetailView(generic.DetailView):
+class BookDetailView(LoginRequiredMixin, generic.DetailView):
     model = Book
     template_name = "media/detail/book-detail.html"
 
@@ -123,15 +91,15 @@ class BookDetailView(generic.DetailView):
         return context
 
 
-class BookDeleteView(generic.DeleteView):
+class BookDeleteView(LoginRequiredMixin, generic.DeleteView):
     model = Book
     success_url = reverse_lazy("media:book_list")
 
 
-class BookCreateView(BookMutateMixin, generic.CreateView):
+class BookCreateView(LoginRequiredMixin, BookMutateMixin, generic.CreateView):
     success_url = reverse_lazy("media:book_list")
 
-class BookUpdateView(BookMutateMixin, generic.UpdateView):
+class BookUpdateView(LoginRequiredMixin, BookMutateMixin, generic.UpdateView):
     def get_success_url(self):
         self.success_url = reverse_lazy("media:book_detail", kwargs={"pk": self.object.id})
         return super().get_success_url()
