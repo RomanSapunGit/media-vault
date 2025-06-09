@@ -70,3 +70,24 @@ class BookForm(forms.ModelForm):
             "chapters": forms.NumberInput(attrs={"class": "form-control"}),
             "type": forms.Select(attrs={"class": "form-control"}),
         }
+
+
+class FilmForm(MediaFormMixin):
+    class Meta:
+        model = Film
+        fields = [
+            "title",
+            "description",
+            "created_at",
+            "creators",
+            "genres",
+            "country",
+            "duration"
+        ]
+        widgets = {
+            "title": forms.TextInput(attrs={"class": "form-control"}),
+            "description": forms.Textarea(attrs={"class": "form-control"}),
+            "created_at": forms.DateInput(attrs={"class": "form-control", "type": "date"}),
+            "country": forms.TextInput(attrs={"class": "form-control"}),
+            "duration": forms.TimeInput(attrs={"class": "form-control"}),
+        }
