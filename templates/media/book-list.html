@@ -24,7 +24,7 @@
           </div>
       </div>
 
-    <a href="{% url 'media:book_create' %}" class="btn btn-outline-secondary mb-auto mx-2">
+    <a href="{% url 'media:book_create' %}?{{ query_params.urlencode }}" class="btn btn-outline-secondary mb-auto mx-2">
       Create
     </a>
 </div>
