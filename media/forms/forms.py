@@ -61,7 +61,7 @@ class BookForm(forms.ModelForm):
             "creators",
             "genres",
             "chapters",
-            "type",
+            "type"
         ]
         widgets = {
             "title": forms.TextInput(attrs={"class": "form-control"}),
