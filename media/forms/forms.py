@@ -1,6 +1,7 @@
 from django import forms
 
-from media.models import Genre, Book, Creator
+from media.forms.mixins import MediaFormMixin
+from media.models import Genre, Book, Film
 
 
 class GenreSearchForm(forms.Form):
