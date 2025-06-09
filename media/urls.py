@@ -1,8 +1,12 @@
 from django.urls import path
 
-from media.views import (index, GenreListView,
-                         BookListView, BookDetailView,
-                         BookDeleteView, BookCreateView)
+from media.views.views import (
+    index, GenreListView,
+    BookListView, BookDetailView,
+    BookDeleteView, BookCreateView,
+    BookUpdateView, FilmListView, FilmCreateView,
+    FilmDetailView, FilmDeleteView, FilmUpdateView
+)
 
 urlpatterns = [
     path("", index, name="index"),
@@ -22,7 +26,19 @@ urlpatterns = [
     path("books/create/", BookCreateView.as_view(), name="book_create"),
     path("comics/", GenreListView.as_view(), name="comic_list"),
     path("series/", GenreListView.as_view(), name="series_list"),
-    path("films/", GenreListView.as_view(), name="film_list"),
+    path("films/", FilmListView.as_view(), name="film_list"),
+    path("films/create/", FilmCreateView.as_view(), name="film_create"),
+    path("films/<int:pk>/", FilmDetailView.as_view(), name="film_detail"),
+    path(
+        "films/<int:pk>/delete/",
+        FilmDeleteView.as_view(),
+        name="film_delete"
+    ),
+path(
+        "films/<int:pk>/update/",
+        FilmUpdateView.as_view(),
+        name="film_update"
+    ),
     path("anime/", GenreListView.as_view(), name="anime_list")
 ]
 
