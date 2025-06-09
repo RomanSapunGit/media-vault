@@ -135,3 +135,36 @@ class BookUpdateView(BookMutateMixin, generic.UpdateView):
     def get_success_url(self):
         self.success_url = reverse_lazy("media:book_detail", kwargs={"pk": self.object.id})
         return super().get_success_url()
+
+class FilmListView(LoginRequiredMixin, MediaListMixin, generic.ListView):
+    model = Film
+    paginate_by = 10
+    template_name = "media/film-list.html"
+
+
+class FilmDetailView(LoginRequiredMixin, generic.DetailView):
+    model = Film
+    template_name = "media/detail/film-detail.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["media_type"] = "film"
+        context["delete_url"] = reverse_lazy(
+            "media:film_delete",
+            args=[context["film"].id]
+        )
+        return context
+
+
+class FilmCreateView(LoginRequiredMixin, FilmMutateMixin, generic.CreateView):
+    success_url = reverse_lazy("media:film_list")
+
+
+class FilmUpdateView(LoginRequiredMixin, FilmMutateMixin, generic.UpdateView):
+    def get_success_url(self):
+        return reverse_lazy("media:film_detail", kwargs={"pk": self.object.id})
+
+
+class FilmDeleteView(LoginRequiredMixin, generic.DeleteView):
+    model = Film
+    success_url = reverse_lazy("media:film_list")
