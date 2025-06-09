@@ -1,0 +1,90 @@
+{% extends 'layouts/base-presentation.html' %}
+{% load query_transform %}
+
+{% block title %}
+  film {{ film.title }}
+{% endblock %}
+
+{% block content %}
+  {% load query_transform %}
+
+
+  <div class="py-10 row g-4 justify-content-center">
+    <div class="col-md-6 col-lg-7">
+      <div class="card shadow-sm h-100">
+        <div class="card-body d-flex flex-column">
+
+          <div class="d-flex">
+            <h5 class="card-title text-primary">{{ film.title }}</h5>
+            <div class="ms-auto">
+
+              <button class="btn btn-outline-dark mb-0">
+                <a href="{% url 'media:film_update' pk=film.id %}">
+                  Update
+                </a>
+              </button>
+
+              <button
+                class="btn btn-outline-danger mb-0"
+                data-bs-toggle="modal"
+                data-bs-target="#exampleModal">
+                Delete
+              </button>
+
+              {% include 'media/form/media-delete-modal-form.html' %}
+
+            </div>
+          </div>
+
+          <p class="card-text text-muted small">
+            Description: <br>
+            {{ film.description }}
+          </p>
+
+          <div class="mb-2">
+
+            <span class="badge bg-gradient-secondary">
+              Country: {{ film.country }}
+            </span>
+            <span class="badge bg-gradient-info">
+              Duration: {{ film.duration|time:'G:i:s' }}
+            </span>
+
+            <span class="badge bg-gradient-light text-dark">
+             Created on: {{ film.created_at }}
+            </span>
+
+          </div>
+
+          {% if film.creators.exists %}
+            <div class="pt-4 mb-2">
+              <strong>Author{{ film.creators.all|length|pluralize }}:</strong>
+              {% for creator in film.creators.all %}
+                <span class="badge bg-light border text-dark me-1 mb-2">
+                  {{ creator.first_name }}
+                    {{ creator.last_name }}
+                </span>
+              {% endfor %}
+            </div>
+          {% else %}
+            <div class="mb-2">
+              <strong>Author unknown</strong>
+            </div>
+          {% endif %}
+
+          {% if film.genres.exists %}
+            <div class="d-flex flex-wrap gap-1 mt-auto">
+              {% for genre in film.genres.all %}
+                <a class="badge rounded-pill bg-gradient-success text-white text-decoration-none"
+                   href="?{% query_transform request=request genres=genre.name %}">
+                  {{ genre.name }}
+                </a>
+              {% endfor %}
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}
