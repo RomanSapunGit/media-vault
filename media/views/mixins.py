@@ -22,4 +22,30 @@ class BookMutateMixin:
 
     def form_valid(self, form):
         self.object.users.add(self.request.user)
-        return super().form_valid(form)
+        return response
+
+
+class FilmMutateMixin:
+    model = Film
+    template_name = "media/form/media-form.html"
+    form_class = FilmForm
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        genre_ids = []
+        if "genres" in self.request.GET:
+            genre_ids = Genre.objects.filter(
+                name__in=self.request.GET.getlist("genres")
+            ).values_list("id", flat=True)
+
+        context["form"] = FilmForm(initial={"genres": genre_ids})
+        context["media_name"] = "film"
+        return context
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        self.object.users.add(self.request.user)
+        return response
+
+
+
