@@ -48,10 +48,12 @@ class BookMutateMixin(MediaMutateMixin):
         context["params"] = self.request.GET.copy()
         return context
 
-    def form_valid(self, form):
-        response = super().form_valid(form)
-        self.object.users.add(self.request.user)
-        return response
+    def get_initial(self):
+        initial = super().get_initial()
+
+        if self.request.method == "GET" and "type" in self.request.GET:
+            type_value = self.request.GET.get("type")
+            initial["type"] = get_reverse_choice(type_value, Book.type)
 
 
 class FilmMutateMixin:
