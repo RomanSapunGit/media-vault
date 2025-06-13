@@ -92,8 +92,10 @@ class MediaListMixin:
         return context
 
     def get_queryset(self):
-        queryset = super().get_queryset()
-        search_form = MediaSearchForm(self.request.GET)
+        queryset = (super()
+                    .get_queryset()
+                    .prefetch_related("genres", "creators")
+                    )
 
         if search_form.is_valid():
             queryset = queryset.filter(
