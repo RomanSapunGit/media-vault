@@ -5,13 +5,14 @@
 
     {% if search_form.name %}
       {{ search_form.name }}
-    {% else %}
+    {% elif search_form.title %}
       {{ search_form.title }}
-
+    {% else %}
+      {{ search_form.username }}
     {% endif %}
 
     {% for key,value in query_params.items %}
-      {% if "title" != key and "name" != key %}
+      {% if "title" != key and "name" != key and "username" != key %}
         <input type="hidden" name="{{ key }}" value="{{ value }}"/>
       {% endif %}
     {% endfor %}
