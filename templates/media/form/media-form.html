@@ -8,14 +8,14 @@
           <div class="col-xl-4 col-lg-5 col-md-7 d-flex flex-column mx-lg-0 mx-auto">
             <div class="card card-plain">
               <div class="card-body">
-              <strong>
-                {% if object %}
-                  Update {{ media_name }}
-                {% else %}
-                  Create {{ media_name }}
-                {% endif %}
-              </strong>
-                <form method="post" action="" role="form">
+                <strong>
+                  {% if object %}
+                    Update {{ media_name }}
+                  {% else %}
+                    Create {{ media_name }}
+                  {% endif %}
+                </strong>
+                <form method="post" action="" role="form" novalidate>
 
                   {% csrf_token %}
                   {{ form.as_p }}
