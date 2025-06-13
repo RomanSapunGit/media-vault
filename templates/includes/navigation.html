@@ -137,6 +137,7 @@
                     <a href="{% url 'media:genre_list' %}?name=Comedy" class="dropdown-item border-radius-md">
                       Comedy
                     </a>
+
                   </div>
                 </div>
               </li>
@@ -193,7 +194,41 @@
                     <a class="dropdown-item ps-3 border-radius-md mb-1" href="#">
                       My ratings
                     </a>
+                    <h6
+                      class="dropdown-header text-dark font-weight-bolder d-flex justify-content-cente align-items-center px-0 mt-3">
+                      <div class="d-inline-block">
+                        <div
+                          class="icon icon-shape icon-xs border-radius-md bg-gradient-primary text-center me-2 d-flex align-items-center justify-content-center ps-0">
+                          <svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg">
+                            <defs>
+                              <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#eb1e8b; stop-opacity:1"/>
+                                <stop offset="100%" style="stop-color:#69006b; stop-opacity:1"/>
+                              </linearGradient>
+                            </defs>
+
+                            <rect x="0" y="0" width="24" height="24" rx="6" fill="url(#grad)"/>
+
+                            <path fill="#ebe5e5"
+                                  d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 1.2c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/>
+                          </svg>
+
+
+                        </div>
+                      </div>
+                      Users
+
+                    </h6>
                   </div>
+                  <a class="dropdown-item ps-3 border-radius-md mb-1" href="{% url 'media:user_list' %}">
+                    All
+                  </a>
+                  <a class="dropdown-item ps-3 border-radius-md mb-1"
+                     href="
+
+                       {% if user.id %}{% url 'media:user_detail' pk=user.id %}{% else %} {% url 'authentication:login' %} {% endif %}">
+                    My profile
+                  </a>
                 </ul>
               </li>
               <li class="nav-item dropdown dropdown-hover mx-2">
