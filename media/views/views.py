@@ -216,3 +216,58 @@ class SeriesDetailView(LoginRequiredMixin, generic.DetailView):
 class SeriesDeleteView(LoginRequiredMixin, generic.DeleteView):
     model = Series
     success_url = reverse_lazy("media:series_list")
+
+
+class UserListView(LoginRequiredMixin, generic.ListView):
+    model = MediaUser
+    paginate_by = 10
+    template_name = "media/list/users-list.html"
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(object_list=object_list, **kwargs)
+        context["query_params"] = self.request.GET.copy()
+        context["search_form"] = UserSearchForm(self.request.GET)
+        return context
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        search_form = UserSearchForm(self.request.GET)
+        if search_form.is_valid():
+            queryset = queryset.filter(
+                username__icontains=search_form.cleaned_data["username"]
+            )
+        return queryset
+
+
+class UserDetailView(LoginRequiredMixin, generic.DetailView):
+    model = MediaUser
+    template_name = "media/detail/user-detail.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["media_type"] = "user"
+        context["delete_url"] = reverse_lazy(
+            "media:user_delete",
+            args=[context["mediauser"].id]
+        )
+        return context
+
+
+class UserDeleteView(LoginRequiredMixin, generic.DeleteView):
+    model = MediaUser
+    success_url = reverse_lazy("media:user_list")
+
+
+class UserUpdateView(LoginRequiredMixin, generic.UpdateView):
+    model = MediaUser
+    template_name = "media/form/media-form.html"
+    form_class = MediaUserUpdateForm
+
+    def get_form(self, form_class=None):
+        if form_class is None:
+            form_class = self.get_form_class()
+        return form_class(user=self.request.user, **self.get_form_kwargs())
+
+    def get_success_url(self):
+        logout(self.request)
+        return reverse_lazy("authentication:login")
