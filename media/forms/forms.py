@@ -1,7 +1,9 @@
 from django import forms
+from django.contrib.auth import password_validation
+from django.contrib.auth.forms import SetPasswordForm
 
 from media.forms.mixins import MediaFormMixin
-from media.models import Genre, Book, Film
+from media.models import Genre, Book, Film, Series, MediaUser
 
 
 class GenreSearchForm(forms.Form):
@@ -57,19 +59,12 @@ class GenreFilterForm(forms.Form):
 class BookForm(MediaFormMixin):
     class Meta:
         model = Book
-        fields = [
-            "title",
-            "description",
-            "created_at",
-            "creators",
-            "genres",
+        fields = MediaFormMixin.BASE_FIELDS + (
             "chapters",
             "type"
-        ]
+        )
         widgets = {
-            "title": forms.TextInput(attrs={"class": "form-control"}),
-            "description": forms.Textarea(attrs={"class": "form-control"}),
-            "created_at": forms.DateInput(attrs={"class": "form-control", "type": "date"}),
+            **MediaFormMixin.BASE_WIDGETS,
             "chapters": forms.NumberInput(attrs={"class": "form-control"}),
             "type": forms.Select(attrs={"class": "form-control"}),
         }
@@ -78,19 +73,12 @@ class BookForm(MediaFormMixin):
 class FilmForm(MediaFormMixin):
     class Meta:
         model = Film
-        fields = [
-            "title",
-            "description",
-            "created_at",
-            "creators",
-            "genres",
+        fields = MediaFormMixin.BASE_FIELDS + (
             "country",
             "duration"
-        ]
+        )
         widgets = {
-            "title": forms.TextInput(attrs={"class": "form-control"}),
-            "description": forms.Textarea(attrs={"class": "form-control"}),
-            "created_at": forms.DateInput(attrs={"class": "form-control", "type": "date"}),
+            **MediaFormMixin.BASE_WIDGETS,
             "country": forms.TextInput(attrs={"class": "form-control"}),
             "duration": forms.TimeInput(attrs={"class": "form-control"}),
         }
