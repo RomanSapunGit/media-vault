@@ -146,3 +146,73 @@ class FilmUpdateView(LoginRequiredMixin, FilmMutateMixin, generic.UpdateView):
 class FilmDeleteView(LoginRequiredMixin, generic.DeleteView):
     model = Film
     success_url = reverse_lazy("media:film_list")
+
+
+class SeriesListView(LoginRequiredMixin, MediaListMixin, generic.ListView):
+    model = Series
+    paginate_by = 10
+    template_name = "media/list/series-list.html"
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(object_list=object_list, **kwargs)
+        context["type_choices"] = [
+            choice_type[1]
+            for choice_type in Series.type.field.choices
+        ]
+        context["status_choices"] = [
+            choice_status[1]
+            for choice_status in Series.status.field.choices
+        ]
+        return context
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        type_choice = self.request.GET.get("type")
+        db_stored_choice = get_reverse_choice(type_choice, Series.type)
+        if db_stored_choice:
+            queryset = queryset.filter(
+                type=db_stored_choice
+            )
+        status_choice = self.request.GET.get("status")
+        db_stored_choice = get_reverse_choice(status_choice, Series.status)
+        if db_stored_choice:
+            queryset = queryset.filter(
+                status=db_stored_choice
+            )
+        return queryset
+
+
+class SeriesCreateView(
+    LoginRequiredMixin, SeriesMutateMixin,
+    generic.CreateView
+):
+    success_url = reverse_lazy("media:series_list")
+
+
+class SeriesUpdateView(
+    LoginRequiredMixin, SeriesMutateMixin,
+    generic.UpdateView
+):
+    def get_success_url(self):
+        return reverse_lazy(
+            "media:series_detail", kwargs={"pk": self.object.id}
+        )
+
+
+class SeriesDetailView(LoginRequiredMixin, generic.DetailView):
+    model = Series
+    template_name = "media/detail/series-detail.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["media_type"] = "series"
+        context["delete_url"] = reverse_lazy(
+            "media:series_delete",
+            args=[context["series"].id]
+        )
+        return context
+
+
+class SeriesDeleteView(LoginRequiredMixin, generic.DeleteView):
+    model = Series
+    success_url = reverse_lazy("media:series_list")
