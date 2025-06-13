@@ -79,7 +79,7 @@
             <div class="d-flex flex-wrap gap-1 mt-auto">
               {% for genre in book.genres.all %}
                 <a class="badge rounded-pill bg-success text-white text-decoration-none"
-                   href="?{% query_transform request=request genres=genre.name %}">
+                   href="{% url 'media:book_list' %}?genres={{ genre.name }}">
                   {{ genre.name }}
                 </a>
               {% endfor %}
