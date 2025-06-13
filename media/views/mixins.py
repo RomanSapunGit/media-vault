@@ -74,10 +74,30 @@ class FilmMutateMixin:
         context["media_name"] = "film"
         return context
 
-    def form_valid(self, form):
-        response = super().form_valid(form)
-        self.object.users.add(self.request.user)
-        return response
+
+class SeriesMutateMixin(MediaMutateMixin):
+    model = Series
+    form_class = SeriesForm
+
+    def get_initial(self):
+        initial = super().get_initial()
+
+        if self.request.method == "GET":
+            if "type" in self.request.GET:
+                type_value = self.request.GET.get("type")
+                initial["type"] = get_reverse_choice(type_value, Series.type)
+            if "status" in self.request.GET:
+                status_value = self.request.GET.get("status")
+                initial["status"] = get_reverse_choice(
+                    status_value, Series.status
+                )
+
+        return initial
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["media_name"] = "series"
+        return context
 
 
 class MediaListMixin:
