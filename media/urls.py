@@ -51,7 +51,22 @@ path(
         FilmUpdateView.as_view(),
         name="film_update"
     ),
-    path("anime/", GenreListView.as_view(), name="anime_list")
+    path("users/", UserListView.as_view(), name="user_list"),
+    path(
+        "users/<int:pk>/",
+        UserDetailView.as_view(),
+        name="user_detail"
+    ),
+    path(
+        "users/<int:pk>/delete",
+        UserDeleteView.as_view(),
+        name="user_delete"
+    ),
+    path(
+        "users/<int:pk>/update",
+        UserUpdateView.as_view(),
+        name="user_update"
+    ),
 ]
 
 app_name = "media"
