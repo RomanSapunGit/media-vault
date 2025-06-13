@@ -76,6 +76,16 @@ class BookListView(LoginRequiredMixin, MediaListMixin, generic.ListView):
         ]
         return context
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        type_choice = self.request.GET.get("type")
+        db_stored_choice = get_reverse_choice(type_choice, Book.type)
+        if db_stored_choice:
+            queryset = queryset.filter(
+                type=db_stored_choice
+            )
+        return queryset
+
 
 class BookDetailView(LoginRequiredMixin, generic.DetailView):
     model = Book
