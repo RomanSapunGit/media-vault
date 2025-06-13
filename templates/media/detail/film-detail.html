@@ -18,8 +18,7 @@
             <h5 class="card-title text-primary">{{ film.title }}</h5>
             <div class="ms-auto">
 
-              <button class="btn btn-outline-dark mb-0">
-                <a href="{% url 'media:film_update' pk=film.id %}">
+                <a class="btn btn-outline-dark mb-0" href="{% url 'media:film_update' pk=film.id %}">
                   Update
                 </a>
               </button>
