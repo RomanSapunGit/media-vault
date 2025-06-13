@@ -5,7 +5,10 @@ from media.views.views import (
     BookListView, BookDetailView,
     BookDeleteView, BookCreateView,
     BookUpdateView, FilmListView, FilmCreateView,
-    FilmDetailView, FilmDeleteView, FilmUpdateView
+    FilmDetailView, FilmDeleteView, FilmUpdateView,
+    SeriesListView, SeriesCreateView, SeriesDetailView,
+    SeriesDeleteView, SeriesUpdateView, UserListView,
+    UserDeleteView, UserDetailView, UserUpdateView
 )
 
 urlpatterns = [
