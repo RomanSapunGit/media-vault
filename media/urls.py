@@ -25,7 +25,19 @@ urlpatterns = [
     ),
     path("books/create/", BookCreateView.as_view(), name="book_create"),
     path("comics/", GenreListView.as_view(), name="comic_list"),
-    path("series/", GenreListView.as_view(), name="series_list"),
+    path("series/", SeriesListView.as_view(), name="series_list"),
+    path("series/create/", SeriesCreateView.as_view(), name="series_create"),
+    path("series/<int:pk>/", SeriesDetailView.as_view(), name="series_detail"),
+    path(
+        "series/<int:pk>/delete/",
+        SeriesDeleteView.as_view(),
+        name="series_delete"
+    ),
+    path(
+        "series/<int:pk>/update/",
+        SeriesUpdateView.as_view(),
+        name="series_update"
+    ),
     path("films/", FilmListView.as_view(), name="film_list"),
     path("films/create/", FilmCreateView.as_view(), name="film_create"),
     path("films/<int:pk>/", FilmDetailView.as_view(), name="film_detail"),
