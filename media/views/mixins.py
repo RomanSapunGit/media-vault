@@ -1,5 +1,9 @@
-from media.forms.forms import BookForm, FilmForm, GenreFilterForm, MediaSearchForm
-from media.models import Book, Film, Genre
+from media.forms.forms import (
+    BookForm, FilmForm,
+    GenreFilterForm, MediaSearchForm,
+    SeriesForm, UserSearchForm
+)
+from media.models import Book, Film, Genre, Series
 from media.utils import get_reverse_choice
 
 
