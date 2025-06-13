@@ -1,4 +1,4 @@
-from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpRequest, HttpResponse
@@ -7,17 +7,22 @@ from django.urls import reverse, reverse_lazy
 from django.views import generic
 
 from media.forms.forms import (
-    GenreSearchForm,
+    GenreSearchForm, UserSearchForm, MediaUserUpdateForm,
 )
-from media.models import Genre, Book, Film
-from media.views.mixins import BookMutateMixin, FilmMutateMixin, MediaListMixin
+from media.models import Genre, Book, Film, Series, Media, MediaUser
+from media.utils import get_reverse_choice
+from media.views.mixins import (
+    BookMutateMixin, FilmMutateMixin,
+    MediaListMixin, SeriesMutateMixin
+)
 
 
 @login_required()
 def index(request: HttpRequest) -> HttpResponse:
     media_users_count = get_user_model().objects.count()
     context = {
-        "media_users_count": media_users_count
+        "media_users_count": media_users_count,
+        "media_titles_count": Media.objects.all().count()
     }
     return render(request, "home/index.html", context)
 
@@ -36,7 +41,7 @@ class GenreListView(LoginRequiredMixin, generic.ListView):
             "film": reverse("media:film_list"),
             "comic": reverse("media:comic_list"),
             "series": reverse("media:series_list"),
-            "anime": reverse("media:anime_list")
+            "anime": f"{reverse('media:series_list')}?type=Anime"
         }
 
         if "media" in self.request.GET:
@@ -66,7 +71,7 @@ class GenreListView(LoginRequiredMixin, generic.ListView):
 class BookListView(LoginRequiredMixin, MediaListMixin, generic.ListView):
     model = Book
     paginate_by = 10
-    template_name = "media/book-list.html"
+    template_name = "media/list/book-list.html"
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(object_list=object_list, **kwargs)
@@ -109,15 +114,19 @@ class BookDeleteView(LoginRequiredMixin, generic.DeleteView):
 class BookCreateView(LoginRequiredMixin, BookMutateMixin, generic.CreateView):
     success_url = reverse_lazy("media:book_list")
 
+
 class BookUpdateView(LoginRequiredMixin, BookMutateMixin, generic.UpdateView):
     def get_success_url(self):
-        self.success_url = reverse_lazy("media:book_detail", kwargs={"pk": self.object.id})
+        self.success_url = reverse_lazy(
+            "media:book_detail", kwargs={"pk": self.object.id}
+        )
         return super().get_success_url()
+
 
 class FilmListView(LoginRequiredMixin, MediaListMixin, generic.ListView):
     model = Film
     paginate_by = 10
-    template_name = "media/film-list.html"
+    template_name = "media/list/film-list.html"
 
 
 class FilmDetailView(LoginRequiredMixin, generic.DetailView):
