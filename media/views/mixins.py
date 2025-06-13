@@ -7,7 +7,27 @@ from media.models import Book, Film, Genre, Series
 from media.utils import get_reverse_choice
 
 
-class BookMutateMixin:
+class MediaMutateMixin:
+    template_name = "media/form/media-form.html"
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        self.object.users.add(self.request.user)
+        return response
+
+    def get_initial(self):
+        initial = super().get_initial()
+        genre_names = self.request.GET.getlist("genres")
+        if self.request.method == "GET" and genre_names:
+            genre_ids = Genre.objects.filter(
+                name__in=genre_names
+            ).values_list("id", flat=True)
+            initial["genres"] = genre_ids
+
+        return initial
+
+
+class BookMutateMixin(MediaMutateMixin):
     model = Book
     template_name = "media/form/media-form.html"
     form_class = BookForm
