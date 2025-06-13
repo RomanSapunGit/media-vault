@@ -1,0 +1,41 @@
+{% extends 'layouts/base-list.html' %}
+
+{% load query_transform %}
+
+{% block title %}
+  users list
+{% endblock %}
+
+{% block list_content %}
+
+  <div class="d-flex flex-column gap-4 flex-md-row justify-content-center mb-3">
+    <a href="{% url 'authentication:register' %}"
+       class="btn btn-outline-secondary mb-auto mx-2">
+      Create
+    </a>
+  </div>
+
+  <div class="mx-1 row g-4 justify-content-center">
+    {% for media_user in mediauser_list %}
+      <div class="col-md-6 col-lg-4">
+        <div class="card shadow-sm h-100">
+          <div class="card-body d-flex flex-column">
+            <h5>
+              <a class="h5 card-title text-primary" href="{% url 'media:user_detail' pk=media_user.id %}">
+                {{ media_user.username }} {% if media_user.username == user.username %} (Me) {% endif %}
+              </a>
+            </h5>
+
+            <p class="card-text text-muted small">
+              Joined: {{ media_user.date_joined|date }}
+            </p>
+          </div>
+        </div>
+      </div>
+    {% empty %}
+      <div class="text-center mx-auto col-sm-9">
+        <p class="mb-0 h5">Nothing to show yet</p>
+      </div>
+    {% endfor %}
+  </div>
+{% endblock %}
