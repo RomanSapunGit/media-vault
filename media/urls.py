@@ -49,7 +49,7 @@ urlpatterns = [
         FilmDeleteView.as_view(),
         name="film_delete"
     ),
-path(
+    path(
         "films/<int:pk>/update/",
         FilmUpdateView.as_view(),
         name="film_update"
