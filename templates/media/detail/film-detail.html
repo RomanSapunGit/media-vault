@@ -76,7 +76,7 @@
             <div class="d-flex flex-wrap gap-1 mt-auto">
               {% for genre in film.genres.all %}
                 <a class="badge rounded-pill bg-gradient-success text-white text-decoration-none"
-                   href="?{% query_transform request=request genres=genre.name %}">
+                   href="{% url 'media:film_list' %}?genres={{ genre.name }}">
                   {{ genre.name }}
                 </a>
               {% endfor %}
