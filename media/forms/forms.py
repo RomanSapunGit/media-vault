@@ -81,3 +81,28 @@ class FilmForm(MediaFormMixin):
             "country": forms.TextInput(attrs={"class": "form-control"}),
             "duration": forms.TimeInput(attrs={"class": "form-control"}),
         }
+
+
+class SeriesForm(MediaFormMixin):
+    class Meta:
+        model = Series
+        fields = MediaFormMixin.BASE_FIELDS + (
+            "country",
+            "status",
+            "seasons",
+            "series_number",
+            "type"
+        )
+
+        widgets = {
+            **MediaFormMixin.BASE_WIDGETS,
+            "country": forms.TextInput(attrs={"class": "form-control"}),
+            "status": forms.Select(attrs={"class": "form-control"}),
+            "seasons": forms.NumberInput(attrs={"class": "form-control"}),
+            "series_number": forms.NumberInput(
+                attrs={"class": "form-control"}
+            ),
+            "type": forms.Select(attrs={"class": "form-control"}),
+        }
+
+
