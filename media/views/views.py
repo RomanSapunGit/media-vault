@@ -24,7 +24,7 @@ def index(request: HttpRequest) -> HttpResponse:
 
 class GenreListView(LoginRequiredMixin, generic.ListView):
     model = Genre
-    template_name = "media/genre-list.html"
+    template_name = "media/list/genre-list.html"
     paginate_by = 10
 
     def get_context_data(self, *, object_list=None, **kwargs):
