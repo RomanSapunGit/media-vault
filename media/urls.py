@@ -1,19 +1,38 @@
 from django.urls import path
 
+from media.views.book_views import (
+    BookListView, BookDetailView,
+    BookDeleteView, BookUpdateView,
+    BookCreateView
+)
+from media.views.film_views import (
+    FilmListView, FilmCreateView,
+    FilmDetailView, FilmDeleteView,
+    FilmUpdateView
+)
+from media.views.series_views import (
+    SeriesListView, SeriesCreateView,
+    SeriesDetailView, SeriesDeleteView,
+    SeriesUpdateView
+)
+from media.views.user_views import (
+    UserListView, UserDetailView,
+    UserDeleteView, UserUpdateView
+)
 from media.views.views import (
     index, GenreListView,
-    BookListView, BookDetailView,
-    BookDeleteView, BookCreateView,
-    BookUpdateView, FilmListView, FilmCreateView,
-    FilmDetailView, FilmDeleteView, FilmUpdateView,
-    SeriesListView, SeriesCreateView, SeriesDetailView,
-    SeriesDeleteView, SeriesUpdateView, UserListView,
-    UserDeleteView, UserDetailView, UserUpdateView
+    CreatorListView, CreatorCreateView
+)
+from media.views.rating_views import (
+    RatingListView, RatingDetailView,
+    RatingDeleteView, RatingUpdateView,
+    RatingCreateView
 )
 
 urlpatterns = [
     path("", index, name="index"),
     path("genres/", GenreListView.as_view(), name="genre_list"),
+    path("creators/", CreatorListView.as_view(), name="creator_list"),
     path("books/", BookListView.as_view(), name="book_list"),
     path("books/<int:pk>/", BookDetailView.as_view(), name="book_detail"),
     path(
@@ -27,7 +46,6 @@ urlpatterns = [
         name="book_update"
     ),
     path("books/create/", BookCreateView.as_view(), name="book_create"),
-    path("comics/", GenreListView.as_view(), name="comic_list"),
     path("series/", SeriesListView.as_view(), name="series_list"),
     path("series/create/", SeriesCreateView.as_view(), name="series_create"),
     path("series/<int:pk>/", SeriesDetailView.as_view(), name="series_detail"),
