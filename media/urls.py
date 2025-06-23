@@ -86,6 +86,12 @@ urlpatterns = [
         RatingUpdateView.as_view(),
         name="rating_update"
     ),
+    path(
+        "ratings/create/",
+        RatingCreateView.as_view(),
+        name="rating_create"
+    ),
+
 ]
 
 app_name = "media"
