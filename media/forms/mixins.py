@@ -30,3 +30,17 @@ class MediaFormMixin(forms.ModelForm):
         queryset=Genre.objects.all(),
         widget=forms.CheckboxSelectMultiple()
     )
+
+
+class CustomErrorMessageMixin:
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for name, field in self.fields.items():
+            label = (field.label or name
+                     .replace('_', ' ')
+                     .capitalize()
+                     )
+            field.error_messages = {
+                'required':
+                    f'The field {label} is required'
+            }
