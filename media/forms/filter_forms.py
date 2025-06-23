@@ -19,4 +19,17 @@ class GenreFilterForm(forms.Form):
     )
 
 
-
+class CreatorFilterForm(forms.Form):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["creators"].choices = [
+            (creator.first_name, creator.first_name)
+            for creator in Creator.objects.all()
+        ]
+    creators = forms.MultipleChoiceField(
+        widget=forms.CheckboxSelectMultiple(
+            attrs={
+                "class": "d-flex flex-wrap gap-2"
+            }
+        ),
+    )
