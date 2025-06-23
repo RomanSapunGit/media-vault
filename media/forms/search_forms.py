@@ -38,3 +38,16 @@ class MediaSearchForm(forms.Form):
             }
         ),
     )
+
+
+class RatingSearchForm(forms.Form):
+    media__title = forms.CharField(
+        max_length=255,
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                "placeholder": "Search title...",
+                "type": "text",
+            }
+        ),
+    )
