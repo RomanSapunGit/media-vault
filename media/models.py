@@ -15,6 +15,7 @@ class Creator(models.Model):
     first_name = models.CharField(max_length=255)
     middle_name = models.CharField(max_length=255, blank=True, null=True)
     last_name = models.CharField(max_length=255)
+    birth_date = models.DateField()
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
