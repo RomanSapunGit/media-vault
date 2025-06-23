@@ -22,6 +22,12 @@ class Creator(models.Model):
 
     class Meta:
         ordering = ("first_name",)
+        constraints = [
+            UniqueConstraint(
+                name="unique_creators",
+                fields=("first_name", "last_name", "birth_date")
+            )
+        ]
 
 
 class Genre(models.Model):
