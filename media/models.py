@@ -68,7 +68,8 @@ class Media(models.Model):
     users = models.ManyToManyField(
         MediaUser,
         through='UserMediaRating',
-        related_name="rated_media")
+        related_name="media"
+    )
     genres = models.ManyToManyField(Genre, related_name="media")
 
     class Meta:
