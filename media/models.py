@@ -155,3 +155,8 @@ class Series(Media):
     seasons = models.PositiveSmallIntegerField()
     series_number = models.PositiveIntegerField()
     type = models.CharField(max_length=65, choices=SeriesChoices.choices)
+
+    def save(self, *args, **kwargs):
+        if not self.media_type:
+            self.media_type = "Series"
+        super().save(*args, **kwargs)
