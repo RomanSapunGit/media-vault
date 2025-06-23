@@ -82,8 +82,16 @@ class Media(models.Model):
 
 
 class UserMediaRating(models.Model):
-    user = models.ForeignKey(MediaUser, on_delete=models.CASCADE)
-    media = models.ForeignKey(Media, on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        MediaUser,
+        related_name="media_ratings",
+        on_delete=models.CASCADE
+    )
+    media = models.ForeignKey(
+        Media,
+        related_name="media_ratings",
+        on_delete=models.CASCADE
+    )
     rating = models.DecimalField(
         max_digits=3,
         decimal_places=1,
