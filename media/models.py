@@ -71,6 +71,7 @@ class Media(models.Model):
         related_name="media"
     )
     genres = models.ManyToManyField(Genre, related_name="media")
+    media_type = models.CharField(max_length=20, editable=False)
 
     class Meta:
         ordering = ("title",)
