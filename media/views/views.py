@@ -42,3 +42,18 @@ class GenreListView(
     paginate_by = 10
     search_form = GenreSearchForm
 
+
+class CreatorListView(
+    LoginRequiredMixin,
+    MediaNameSessionMixin,
+    SearchMixin,
+    MediaTypeCountMixin,
+    generic.ListView
+):
+    model = Creator
+    template_name = "media/list/creator_list.html"
+    paginate_by = 10
+    search_form = CreatorSearchForm
+
+
+
