@@ -145,6 +145,7 @@ class Book(Media):
 
 class Series(Media):
     class SeriesChoices(models.TextChoices):
+        ORIGINAL = "OS", "Original series"
         SPIN_OFF = "SO", "Spin-off",
         ANTHOLOGY = "AY", "Anthology",
         ADAPTATION = "AD", "Adaptation"
