@@ -106,7 +106,7 @@ class UserMediaRating(models.Model):
         null=True,
         blank=True
     )
-    is_hidden = models.BooleanField(default=False)
+    is_hidden = models.BooleanField(default=True)
 
     class Meta:
         constraints = [
