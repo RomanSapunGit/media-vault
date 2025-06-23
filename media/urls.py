@@ -70,6 +70,22 @@ urlpatterns = [
         UserUpdateView.as_view(),
         name="user_update"
     ),
+    path("ratings/", RatingListView.as_view(), name="rating_list"),
+    path(
+        "ratings/<int:pk>/",
+        RatingDetailView.as_view(),
+        name="rating_detail"
+    ),
+    path(
+        "ratings/<int:pk>/delete/",
+        RatingDeleteView.as_view(),
+        name="rating_delete"
+    ),
+    path(
+        "ratings/<int:pk>/update",
+        RatingUpdateView.as_view(),
+        name="rating_update"
+    ),
 ]
 
 app_name = "media"
