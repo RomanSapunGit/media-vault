@@ -119,6 +119,11 @@ class Film(Media):
     country = models.CharField(max_length=255)
     duration = models.TimeField()
 
+    def save(self, *args, **kwargs):
+        if not self.media_type:
+            self.media_type = "Film"
+        super().save(*args, **kwargs)
+
 
 class Book(Media):
     class BookTypeChoices(models.TextChoices):
