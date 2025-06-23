@@ -51,3 +51,16 @@ class RatingSearchForm(forms.Form):
             }
         ),
     )
+
+
+class UserSearchForm(forms.Form):
+    username = forms.CharField(
+        max_length=255,
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                "placeholder": "Search username...",
+                "type": "text",
+            }
+        ),
+    )
