@@ -91,7 +91,11 @@ urlpatterns = [
         RatingCreateView.as_view(),
         name="rating_create"
     ),
-
+    path(
+        "creators/create/",
+        CreatorCreateView.as_view(),
+        name="creator_create"
+    ),
 ]
 
 app_name = "media"
