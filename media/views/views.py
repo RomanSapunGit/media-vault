@@ -56,4 +56,29 @@ class CreatorListView(
     search_form = CreatorSearchForm
 
 
+class CreatorCreateView(LoginRequiredMixin, generic.CreateView):
+    model = Creator
+    form_class = CreatorForm
+    template_name = "media/form/form.html"
+    success_url = reverse_lazy("media:creator_list")
 
+    def form_valid(self, form):
+        self.object = form.save()
+        if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            return JsonResponse({
+                'success': True,
+                'author': {
+                    'id': self.object.id,
+                    'name': str(self.object),
+                }
+            })
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            html = render_to_string(
+                'media/form/modal/create_author_modal.html', {
+                    'creator_form': form
+                }, request=self.request)
+            return JsonResponse({'success': False, 'form_html': html})
+        return super().form_invalid(form)
