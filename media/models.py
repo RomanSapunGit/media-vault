@@ -137,6 +137,11 @@ class Book(Media):
     chapters = models.PositiveSmallIntegerField()
     type = models.CharField(max_length=65, choices=BookTypeChoices.choices)
 
+    def save(self, *args, **kwargs):
+        if not self.media_type:
+            self.media_type = "Book"
+        super().save(*args, **kwargs)
+
 
 class Series(Media):
     class SeriesChoices(models.TextChoices):
