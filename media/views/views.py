@@ -22,7 +22,8 @@ def index(request: HttpRequest) -> HttpResponse:
     media_users_count = get_user_model().objects.count()
     context = {
         "media_users_count": media_users_count,
-        "media_titles_count": Media.objects.all().count()
+        "media_titles_count": Media.objects.all().count(),
+        "media_ratings_count": UserMediaRating.objects.all().count()
     }
     return render(request, "home/index.html", context)
 
