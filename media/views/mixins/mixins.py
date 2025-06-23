@@ -23,3 +23,22 @@ class SearchMixin:
             )
         return queryset
 
+
+class TypeChoiceMixin:
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(object_list=object_list, **kwargs)
+        context["type_choices"] = [
+            choice_type[1]
+            for choice_type in self.model.type.field.choices
+        ]
+        return context
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        type_choice = self.request.GET.get("type")
+        db_stored_choice = get_reverse_choice(type_choice, self.model.type)
+        if db_stored_choice:
+            queryset = queryset.filter(
+                type=db_stored_choice
+            )
+        return queryset
