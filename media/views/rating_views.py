@@ -48,7 +48,10 @@ class RatingDeleteView(LoginRequiredMixin, generic.DeleteView):
     model = UserMediaRating
 
     def get_success_url(self):
-        success_url = self.request.POST.get("next", reverse_lazy("media:rating_list"))
+        success_url = self.request.POST.get(
+            "next",
+            reverse_lazy("media:rating_list")
+        )
         return success_url
 
 
