@@ -26,6 +26,7 @@ class CreatorFilterForm(forms.Form):
             (creator.first_name, creator.first_name)
             for creator in Creator.objects.all()
         ]
+
     creators = forms.MultipleChoiceField(
         widget=forms.CheckboxSelectMultiple(
             attrs={
