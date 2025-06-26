@@ -1,0 +1,61 @@
+{% extends 'layouts/base_presentation.html' %}
+{% load query_transform %}
+
+{% block title %}
+  rating {{ rating.title }}
+{% endblock %}
+
+{% block content %}
+  {% load query_transform %}
+
+
+  <div class="py-10 row g-4 justify-content-center">
+    <div class="col-md-6 col-lg-4">
+        <div class="card shadow-sm h-100">
+          <div class="card-body d-flex flex-column">
+
+            {% if user == rating.user %}
+            <div class="d-flex">
+            <h5 class="card-title text-primary">{{ rating.title }}</h5>
+            <div class="ms-auto">
+
+                <a class="btn btn-outline-dark mb-0" href="{% url 'media:rating_update' pk=rating.id %}">
+                  Update
+                </a>
+
+              <button
+                class="btn btn-outline-danger mb-0"
+                data-bs-toggle="modal"
+                data-bs-target="#exampleModal">
+                Delete
+              </button>
+
+              {% include 'media/form/modal/media_delete_modal_form.html' %}
+
+            </div>
+          </div>
+          {% endif %}
+            <h5>
+              <a class="h5 card-title text-primary" href="{% url 'media:film_detail' pk=rating.media.id %}">
+                {{ review.media.media_type }} <br> Title: {{ rating.media.title }}
+              </a>
+            </h5>
+            <h6 class="h5 card-background text-info">
+               Rating: {{ rating.rating }}
+            </h6>
+            <div class="mb-2">
+              <strong>By:</strong>
+              <span class="badge bg-light border text-dark me-1 mb-2">
+                 {{ rating.user.username }}
+                </span>
+            </div>
+
+            <p class="card-text text-muted small">
+              {{ rating.review }}
+            </p>
+          </div>
+        </div>
+      </div>
+  </div>
+
+{% endblock %}
