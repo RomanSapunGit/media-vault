@@ -229,6 +229,44 @@
                        {% if user.id %}{% url 'media:user_detail' pk=user.id %}{% else %} {% url 'authentication:login' %} {% endif %}">
                     My profile
                   </a>
+                  <h6
+                    class="dropdown-header text-dark font-weight-bolder d-flex justify-content-cente align-items-center px-0 mt-3">
+                    <div class="d-inline-block">
+                      <div
+                        class="icon icon-shape icon-xs border-radius-md bg-gradient-primary text-center me-2 d-flex align-items-center justify-content-center ps-0">
+                        <svg width="256" height="256" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                          <defs>
+                            <linearGradient id="backgroundGradient-1750008930585" x1="87.7354790111386%"
+                                            y1="17.197048550474634%" x2="12.264520988861399%" y2="82.80295144952537%">
+                              <stop offset="0%" stop-color="#eb1e8b"/>
+                              <stop offset="100%" stop-color="#69006b"/>
+                            </linearGradient>
+                          </defs>
+                          <rect x="0" y="0" width="24" height="24" rx="8"
+                                fill="url(#backgroundGradient-1750008930585)"/>
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#d9d9d9" x="0" y="0"
+                               width="24" height="24">
+                            <path fill="#d9d9d9"
+                                  d="M3 6.71v9.91c1.14-.41 2.31-.62 3.5-.62s2.36.21 3.5.62v-9.9C8.89 6.25 7.7 6 6.5 6c-1.22 0-2.39.24-3.5.71z"
+                                  opacity=".3"/>
+                            <path fill="#d9d9d9" d="m19 .5l-5 5V15l5-4.5z"/>
+                            <path fill="#d9d9d9"
+                                  d="M22.47 5.2c-.47-.24-.96-.44-1.47-.61v12.03c-1.14-.41-2.31-.62-3.5-.62c-1.9 0-3.78.54-5.5
+                                  1.58V5.48C10.38 4.55 8.51 4 6.5 4c-1.79 0-3.48.44-4.97 1.2c-.33.16-.53.51-.53.88v12.08c0 .58.47.99 1
+                                  .99c.16 0 .32-.04.48-.12C3.69 18.4 5.05 18 6.5 18c2.07 0 3.98.82 5.5 2c1.52-1.18 3.43-2 5.5-2c1.45 0 2.81.4
+                                  4.02 1.04c.16.08.32.12.48.12c.52 0 1-.41 1-.99V6.08c0-.37-.2-.72-.53-.88zM10 16.62C8.86
+                                  16.21 7.69 16 6.5 16s-2.36.21-3.5.62V6.71C4.11 6.24 5.28 6 6.5 6c1.2 0 2.39.25 3.5.72v9.9z"/>
+                          </svg>
+                        </svg>
+
+
+                      </div>
+                    </div>
+                    <a href="{% url 'media:creator_list' %}">
+                    Creators
+                  </a>
+
+                  </h6>
                 </ul>
               </li>
               <li class="nav-item dropdown dropdown-hover mx-2">
