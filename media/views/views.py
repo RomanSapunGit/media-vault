@@ -82,3 +82,8 @@ class CreatorCreateView(LoginRequiredMixin, generic.CreateView):
                 }, request=self.request)
             return JsonResponse({'success': False, 'form_html': html})
         return super().form_invalid(form)
+
+
+class CreatorDeleteView(LoginRequiredMixin, generic.DeleteView):
+    model = Creator
+    success_url = reverse_lazy("media:creator_list")
