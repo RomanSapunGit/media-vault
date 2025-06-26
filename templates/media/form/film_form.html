@@ -1,0 +1,14 @@
+{% extends 'media/form/media_form.html' %}
+
+{% block form_content %}
+  <div class="fieldWrapper">
+    {{ form.country.errors }}
+    <label for="{{ form.country.id_for_label }}">Country:</label>
+    {{ form.country }}
+  </div>
+  <div class="fieldWrapper">
+    {{ form.duration.errors }}
+    <label for="{{ form.duration.id_for_label }}">Film duration:</label>
+    {{ form.duration }}
+  </div>
+{% endblock %}
