@@ -120,6 +120,11 @@ urlpatterns = [
         CreatorDeleteView.as_view(),
         name="creator_delete"
     ),
+    path(
+        "creators/<int:pk>/update/",
+        CreatorUpdateView.as_view(),
+        name="creator_update"
+    ),
 ]
 
 app_name = "media"
