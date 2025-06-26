@@ -1,0 +1,14 @@
+{% extends 'media/form/media_form.html' %}
+
+{% block form_content %}
+  <div class="fieldWrapper">
+    {{ form.chapters.errors }}
+    <label for="{{ form.chapters.id_for_label }}">Chapters:</label>
+    {{ form.chapters }}
+  </div>
+  <div class="fieldWrapper">
+    {{ form.type.errors }}
+    <label for="{{ form.type.id_for_label }}">Book type:</label>
+    {{ form.type }}
+  </div>
+{% endblock %}
