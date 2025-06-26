@@ -1,8 +1,7 @@
-{% extends 'layouts/base-presentation.html' %}
+{% extends 'layouts/base_presentation.html' %}
 
 {% block title %} main page {% endblock title %}
 
-<!-- Specific CSS goes HERE -->
 {% block stylesheets %}{% endblock stylesheets %}
 
 {% block body_class %} index-page {% endblock body_class %}
@@ -52,7 +51,6 @@
               <div class="p-3 text-center">
                 <h1 class="text-gradient text-primary"><span id="state1" countTo="{{ media_titles_count }}">0</span>+</h1>
                 <h5 class="mt-3">Titles</h5>
-                <p class="text-sm">...</p>
               </div>
               <hr class="vertical dark">
             </div>
@@ -60,7 +58,6 @@
               <div class="p-3 text-center">
                 <h1 class="text-gradient text-primary"> <span id="state2" countTo="{{ media_ratings_count }}">0</span>+</h1>
                 <h5 class="mt-3">Ratings</h5>
-                <p class="text-sm">...</p>
               </div>
               <hr class="vertical dark">
             </div>
@@ -68,7 +65,6 @@
               <div class="p-3 text-center">
                 <h1 class="text-gradient text-primary" id="state3" countTo="{{ media_users_count }}">0</h1>
                 <h5 class="mt-3">Users</h5>
-                <p class="text-sm">...</p>
               </div>
             </div>
           </div>
@@ -79,7 +75,6 @@
 
 {% endblock content %}
 
-<!-- Specific JS goes HERE --> 
 {% block javascripts %}
 
   <script src="{{ ASSETS_ROOT }}/js/plugins/countup.min.js"></script>
