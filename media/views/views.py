@@ -87,3 +87,15 @@ class CreatorCreateView(LoginRequiredMixin, generic.CreateView):
 class CreatorDeleteView(LoginRequiredMixin, generic.DeleteView):
     model = Creator
     success_url = reverse_lazy("media:creator_list")
+
+
+class CreatorUpdateView(LoginRequiredMixin, generic.UpdateView):
+    model = Creator
+    form_class = CreatorForm
+    template_name = "media/form/form.html"
+    success_url = reverse_lazy("media:creator_list")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["media_name"] = "creator"
+        return context
