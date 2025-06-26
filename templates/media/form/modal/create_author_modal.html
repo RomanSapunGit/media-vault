@@ -1,0 +1,69 @@
+<div class="modal fade" id="createAuthor" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <form method="post" action="{% url 'media:creator_create' %}" novalidate>
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Create author</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+
+          {% csrf_token %}
+          {{ creator_form.as_p }}
+
+        </div>
+        <div class="modal-footer justify-content-between">
+          <button type="button" class="btn bg-gradient-dark" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn bg-gradient-primary">Save changes</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#createAuthor form').submit(function (event) {
+            event.preventDefault();
+
+            const form = $(this);
+            const url = form.attr('action');
+            const formData = form.serialize();
+
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: formData,
+                success: function (response) {
+                    if (response.success) {
+                        $('#createAuthor').modal('hide');
+
+                        const newAuthorId = response.author.id;
+                        const newAuthorName = response.author.name;
+
+                        const inputId = 'id_creators_' + newAuthorId;
+
+                        const newCheckboxDiv = $(`
+      <div>
+        <label for="${inputId}">
+<input type="checkbox" name="creators" value="${newAuthorId}" id="${inputId}" checked>${newAuthorName}
+</label>
+      </div>
+    `);
+
+                        $('#id_creators').append(newCheckboxDiv);
+
+                        alert('Author added and selected: ' + newAuthorName);
+                    } else {
+                        $('#createAuthor .modal-body').html(response.form_html);
+                    }
+                },
+
+                error: function () {
+                    alert('Something went wrong.');
+                }
+            });
+        });
+    });
+
+</script>
