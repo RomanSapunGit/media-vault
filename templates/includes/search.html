@@ -3,16 +3,12 @@
 <div class="search-container">
   <form method="get" action="" class="search">
 
-    {% if search_form.name %}
-      {{ search_form.name }}
-    {% elif search_form.title %}
-      {{ search_form.title }}
-    {% else %}
-      {{ search_form.username }}
-    {% endif %}
+    {% for field in search_form %}
+      {{ field }}
+    {% endfor %}
 
     {% for key,value in query_params.items %}
-      {% if "title" != key and "name" != key and "username" != key %}
+       {% if "title" != key and "name" != key and "username" != key and "first_name" != key and "media__title" != key %}
         <input type="hidden" name="{{ key }}" value="{{ value }}"/>
       {% endif %}
     {% endfor %}
