@@ -63,7 +63,11 @@ class RatingCreateView(
     success_url = reverse_lazy("media:rating_list")
 
 
-class RatingUpdateView(LoginRequiredMixin, RatingViewMixin, generic.UpdateView):
+class RatingUpdateView(
+    LoginRequiredMixin,
+    RatingViewMixin,
+    generic.UpdateView
+):
     def get_success_url(self):
         if "next" in self.request.GET:
             success_url = reverse_lazy(
