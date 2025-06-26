@@ -25,7 +25,24 @@
   <!-- Specific CSS goes HERE -->
   {% block stylesheets %}
     <style>
+        html {
+            scroll-padding-top: 100px;
+        }
 
+        .hover-buttons {
+            display: block;
+        }
+
+        @media (hover: hover) {
+            .hover-buttons {
+                display: none;
+            }
+
+            .rating-item:hover .hover-buttons {
+                display: flex;
+                gap: 0.5rem;
+            }
+        }
     </style>
   {% endblock stylesheets %}
 </head>
