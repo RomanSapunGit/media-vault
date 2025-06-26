@@ -1,0 +1,29 @@
+{% extends 'media/form/media_form.html' %}
+
+{% block form_content %}
+  <div class="fieldWrapper">
+    {{ form.country.errors }}
+    <label for="{{ form.country.id_for_label }}">Country:</label>
+    {{ form.country }}
+  </div>
+  <div class="fieldWrapper">
+    {{ form.status.errors }}
+    <label for="{{ form.status.id_for_label }}">Series status:</label>
+    {{ form.status }}
+  </div>
+  <div class="fieldWrapper">
+    {{ form.seasons.errors }}
+    <label for="{{ form.seasons.id_for_label }}">Series seasons:</label>
+    {{ form.seasons }}
+  </div>
+  <div class="fieldWrapper">
+    {{ form.series_number.errors }}
+    <label for="{{ form.series_number.id_for_label }}">Series series_number:</label>
+    {{ form.series_number }}
+  </div>
+  <div class="fieldWrapper">
+    {{ form.type.errors }}
+    <label for="{{ form.type.id_for_label }}">Series type:</label>
+    {{ form.type }}
+  </div>
+{% endblock %}
