@@ -55,6 +55,11 @@ class CreatorListView(
     paginate_by = 10
     search_form = CreatorSearchForm
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["media_type"] = "creator"
+        return context
+
 
 class CreatorCreateView(LoginRequiredMixin, generic.CreateView):
     model = Creator
