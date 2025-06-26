@@ -75,7 +75,10 @@ class RatingUpdateView(
                 args=[self.request.GET.get("user_id", "1")]
             )
         else:
-            success_url = reverse_lazy("media:rating_detail", args=[self.kwargs["pk"]])
+            success_url = reverse_lazy(
+                "media:rating_detail",
+                args=[self.kwargs["pk"]]
+            )
         return success_url
 
     def get_form_kwargs(self):
