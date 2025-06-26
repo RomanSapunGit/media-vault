@@ -4,7 +4,10 @@ from django.views import generic
 
 from media.forms.search_forms import RatingSearchForm
 from media.models import UserMediaRating
-from media.views.mixins.media_mixin import MediaTypeFilterMixin, MediaNameSessionMixin
+from media.views.mixins.media_mixin import (
+    MediaTypeFilterMixin,
+    MediaNameSessionMixin
+)
 from media.views.mixins.mixins import (
     SearchMixin,
 
