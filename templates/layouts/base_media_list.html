@@ -1,0 +1,36 @@
+{% extends 'layouts/base_list.html' %}
+
+{% load query_transform %}
+
+
+{% block list_content %}
+
+<div class="d-flex flex-column gap-4 flex-md-row justify-content-center mb-3">
+    <div class="row col-lg-4 mx-2">
+      <button class="btn btn-outline-primary mw-20"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#filterCollapse"
+              aria-expanded="false"
+              aria-controls="filterCollapse">
+        Filters
+      </button>
+      <div id="filterCollapse" class="collapse pb-4">
+        <div class="d-flex justify-content-center">
+          <a class="btn btn-outline-secondary mt-2" href="{{ request.path }}">
+            Reset filters
+          </a>
+        </div>
+        {% block include_content %}
+          {% endblock %}
+      </div>
+    </div>
+    <a href="{% url 'media:book_create' %}?{{ query_params.urlencode }}" class="btn btn-outline-secondary mb-auto mx-2">
+      Create
+    </a>
+  </div>
+
+  {% block media_content %}
+    {% endblock %}
+
+{% endblock %}
