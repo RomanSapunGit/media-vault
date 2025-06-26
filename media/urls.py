@@ -21,7 +21,8 @@ from media.views.user_views import (
 )
 from media.views.views import (
     index, GenreListView,
-    CreatorListView, CreatorCreateView
+    CreatorListView, CreatorCreateView,
+    CreatorDeleteView, CreatorUpdateView
 )
 from media.views.rating_views import (
     RatingListView, RatingDetailView,
@@ -113,6 +114,11 @@ urlpatterns = [
         "creators/create/",
         CreatorCreateView.as_view(),
         name="creator_create"
+    ),
+    path(
+        "creators/<int:pk>/delete/",
+        CreatorDeleteView.as_view(),
+        name="creator_delete"
     ),
 ]
 
