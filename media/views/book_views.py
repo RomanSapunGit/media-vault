@@ -4,7 +4,7 @@ from django.views import generic
 
 from media.forms.search_forms import MediaSearchForm
 from media.models import Book
-from media.views.mixins.media_mixin import BookMutateMixin
+from media.views.mixins.media_mixin import BookMutateMixin, MediaListMixin
 from media.views.mixins.mixins import (
     SearchMixin,
     TypeChoiceMixin,
@@ -13,6 +13,7 @@ from media.views.mixins.mixins import (
 
 class BookListView(
     LoginRequiredMixin,
+    MediaListMixin,
     SearchMixin,
     TypeChoiceMixin,
     generic.ListView
