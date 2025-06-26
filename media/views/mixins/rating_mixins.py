@@ -1,10 +1,10 @@
-from media.forms.forms import UserMediaRatingForm
+from media.forms.forms import MediaUserRatingForm
 from media.models import UserMediaRating
 
 
 class RatingViewMixin:
     model = UserMediaRating
-    form_class = UserMediaRatingForm
+    form_class = MediaUserRatingForm
     template_name = "media/form/form.html"
 
     def get_context_data(self, **kwargs):
