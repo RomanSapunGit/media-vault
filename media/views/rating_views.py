@@ -55,7 +55,11 @@ class RatingDeleteView(LoginRequiredMixin, generic.DeleteView):
         return success_url
 
 
-class RatingCreateView(LoginRequiredMixin, RatingViewMixin, generic.CreateView):
+class RatingCreateView(
+    LoginRequiredMixin,
+    RatingViewMixin,
+    generic.CreateView
+):
     success_url = reverse_lazy("media:rating_list")
 
 
