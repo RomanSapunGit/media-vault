@@ -23,9 +23,11 @@
     <div class="col-lg-10 text-center mx-auto">
       <ul class="list-unstyled">
         <li>
-          <p class="text-lg mb-0 h1">
-            <a class="rating-content"
-               href="{{ redirect_url }}?creators={{ creator.first_name }}">{{ creator.first_name }} {{ creator.media_type_count }}</a>
+          <h3 class="mb-1">
+            <a href="{{ redirect_url }}?creators={{ creator.first_name }}" class="text-primary text-gradient">{{ creator.first_name}} {{ creator.last_name }}</a>
+          </h3>
+          <p class="text-sm text-muted">
+            {{ creator.media_type_count }} result{{ creator.media_type_count|pluralize}}
           </p>
           <div class="pt-2">
             <a class="btn btn-sm btn-outline-primary"
