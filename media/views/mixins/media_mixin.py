@@ -105,9 +105,9 @@ class MediaListMixin:
         if not hasattr(self, "_filter_forms"):
             self._filter_forms = {
                 "genre_filter_form":
-                    GenreFilterForm(initial=query_params),
+                    GenreFilterForm(query_params) if "genres" in query_params else GenreFilterForm(),
                 "creators_filter_form":
-                    CreatorFilterForm(initial=query_params),
+                    CreatorFilterForm(query_params) if "creators" in query_params else CreatorFilterForm(),
             }
         return self._filter_forms
 
@@ -131,8 +131,7 @@ class MediaListMixin:
             )
         )
 
-        forms = self.get_filter_forms()
-
+        forms = self.get_filter_forms(self.request.GET)
         if forms["genre_filter_form"].is_valid():
             queryset = queryset.filter(
                 genres__name__in=forms["genre_filter_form"]
