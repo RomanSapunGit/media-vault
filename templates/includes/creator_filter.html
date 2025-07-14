@@ -12,7 +12,7 @@
                   {{ creators_filter_form }}
 
                   {% for key,value in query_params.items %}
-                    {% if "genres" != key %}
+                    {% if "creators" != key %}
                       <input type="hidden" name="{{ key }}" value="{{ value }}"/>
                     {% endif %}
                   {% endfor %}
