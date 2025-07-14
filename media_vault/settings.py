@@ -67,6 +67,9 @@ TEMPLATES = [
                 "django.contrib.messages.context_processors.messages",
                 "media.context_processors.cfg_assets_root",
             ],
+            "libraries": {
+                "query_transform": "media.template_tags.query_transform",
+            }
         },
     },
 ]
