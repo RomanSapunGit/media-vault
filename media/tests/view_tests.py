@@ -63,3 +63,49 @@ class PrivateViewTests(TestCase):
                                    f"Harry Potter and the Philosopher's Stone")
 
         self.assertEqual(list(response.context["book_list"]), [book])
+
+    def test_book_list_filter_with_wrong_query_shows_all_books(self):
+        response = self.client.get(f"{reverse('media:book_list')}?type=wrong+type")
+        self.assertEqual(response.status_code, 200)
+        self.assertNotEqual(list(response.context["book_list"]), [])
+
+    def test_book_list_filter(self):
+        new_book = Book(**self.data)
+        new_book.save()
+        book = Book.objects.get(pk=3)
+
+        response = self.client.get(f"{reverse('media:book_list')}?type=Comics")
+        self.assertEqual(list(response.context["book_list"]), [])
+
+        response = self.client.get(f"{reverse('media:book_list')}?genres=Fantasy")
+        self.assertEqual(list(response.context["book_list"]), [book])
+
+        response = self.client.get(f"{reverse('media:book_list')}?creators=Joanne")
+        self.assertEqual(list(response.context["book_list"]), [book])
+
+    def test_create_book(self):
+
+        response = self.client.post(
+            reverse("media:book_create"),
+            self.data
+        )
+        self.assertIsNotNone(response.context["form"].errors)
+
+        self.data.update({"genres": 1})
+        response = self.client.post(
+            reverse("media:book_create"),
+            self.data
+        )
+
+        self.assertEqual(response.status_code, 302)
+        created_book = Book.objects.get(title=self.BOOK_TITLE)
+        self.assertIsNotNone(created_book)
+
+    def test_create_book_with_initial(self):
+        response = self.client.get(
+            f"{reverse('media:book_create')}?type=Comics"
+        )
+        self.assertEqual(
+            "CS",
+            response.context["form"].initial.get("type")
+        )
