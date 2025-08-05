@@ -42,6 +42,7 @@ class PrivateViewTests(TestCase):
         user = get_user_model().objects.create_user(
             username="user", password="password"
         )
+        self.user = user
         self.client.force_login(user)
 
     def test_book_list_exact(self):
