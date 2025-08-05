@@ -1,0 +1,141 @@
+[
+  {
+    "model": "media.genre",
+    "pk": 1,
+    "fields": {
+      "name": "Fantasy"
+    }
+  },
+  {
+    "model": "media.genre",
+    "pk": 2,
+    "fields": {
+      "name": "Science Fiction"
+    }
+  },
+  {
+    "model": "media.creator",
+    "pk": 1,
+    "fields": {
+      "first_name": "Isaac",
+      "middle_name": "",
+      "last_name": "Asimov",
+      "birth_date": "1920-01-02"
+    }
+  },
+  {
+    "model": "media.creator",
+    "pk": 2,
+    "fields": {
+      "first_name": "Joanne",
+      "middle_name": "",
+      "last_name": "Rowling",
+      "birth_date": "1965-07-31"
+    }
+  },
+  {
+    "model": "media.mediauser",
+    "pk": 1,
+    "fields": {
+      "username": "alice",
+      "password": "pbkdf2_sha256$216000$example",
+      "is_superuser": false,
+      "is_staff": false,
+      "is_active": true
+    }
+  },
+  {
+    "model": "media.mediauser",
+    "pk": 2,
+    "fields": {
+      "username": "Tom",
+      "password": "pbkdf2_sha256$216000$example",
+      "is_superuser": false,
+      "is_staff": false,
+      "is_active": true
+    }
+  },
+  {
+  "model": "media.media",
+  "pk": 3,
+  "fields": {
+    "title": "Harry Potter and the Philosopher's Stone",
+    "created_by": "alice",
+    "description": "A young wizard discovers his magical heritage and attends Hogwarts School of Witchcraft and Wizardry.",
+    "created_at": "1997-06-26",
+    "media_type": "Book",
+    "creators": [2],
+    "users": [1],
+    "genres": [1]
+  }
+},
+  {
+    "model": "media.book",
+    "pk": 3,
+    "fields": {
+      "title": "Harry Potter and the Philosopher's Stone",
+      "description": "A young wizard discovers his magical heritage and attends Hogwarts School of Witchcraft and Wizardry.",
+      "created_at": "1997-06-26",
+      "chapters": 17,
+      "type": "TB"
+    }
+  },
+  {
+  "model": "media.media",
+  "pk": 1,
+  "fields": {
+    "title": "I, Robot",
+    "created_by": "alice",
+    "description": "In a future where robots are part of daily life, a detective investigates a crime possibly committed by one.",
+    "created_at": "2004-07-16",
+    "media_type": "Film",
+    "creators": [1],
+    "users": [1],
+    "genres": [2]
+  }
+},
+{
+  "model": "media.film",
+  "pk": 1,
+  "fields": {
+    "country": "USA",
+    "duration": "01:55:00"
+  }
+},
+  {
+  "model": "media.media",
+  "pk": 2,
+  "fields": {
+    "title": "Fullmetal Alchemist: Brotherhood",
+    "created_by": "alice",
+    "description": "Two brothers use alchemy in their quest to restore their bodies after a failed attempt to bring their mother back to life.",
+    "created_at": "2009-04-05",
+    "media_type": "Series",
+    "creators": [1],
+    "users": [1],
+    "genres": [2]
+  }
+},
+  {
+    "model": "media.series",
+    "pk": 2,
+    "fields": {
+      "country": "Japan",
+      "status": "F",
+      "seasons": 1,
+      "series_number": 64,
+      "type": "AE"
+    }
+  },
+  {
+    "model": "media.usermediarating",
+    "pk": 1,
+    "fields": {
+      "user": 2,
+      "media": 1,
+      "review": "An amazing start to a magical series!",
+      "status": "F",
+      "is_hidden": false
+    }
+  }
+]
