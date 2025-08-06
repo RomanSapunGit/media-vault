@@ -23,6 +23,7 @@ class SeriesListView(
     paginate_by = 10
     template_name = "media/list/series_list.html"
     search_form = MediaSearchForm
+    url_create = reverse_lazy("media:series_create")
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(object_list=object_list, **kwargs)
