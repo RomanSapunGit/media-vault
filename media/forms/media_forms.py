@@ -28,7 +28,7 @@ class FilmForm(CustomErrorMessageMixin, MediaFormMixin):
         widgets = {
             **MediaFormMixin.BASE_WIDGETS,
             "country": forms.TextInput(attrs={"class": "form-control"}),
-            "duration": forms.TimeInput(attrs={"class": "form-control"}),
+            "duration": forms.TimeInput(attrs={"class": "form-control", "type": "time"}),
         }
 
 
