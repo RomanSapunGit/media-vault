@@ -18,6 +18,7 @@ class FilmListView(
     paginate_by = 10
     template_name = "media/list/film_list.html"
     search_form = MediaSearchForm
+    url_create = reverse_lazy("media:film_create")
 
 
 class FilmDetailView(LoginRequiredMixin, generic.DetailView):
