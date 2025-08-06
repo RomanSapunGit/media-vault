@@ -22,7 +22,7 @@ class BookListView(
     paginate_by = 10
     template_name = "media/list/book_list.html"
     search_form = MediaSearchForm
-
+    url_create = reverse_lazy("media:book_create")
 
 class BookDetailView(LoginRequiredMixin, generic.DetailView):
     model = Book
