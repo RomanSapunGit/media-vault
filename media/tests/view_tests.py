@@ -102,7 +102,7 @@ class PrivateViewTests(TestCase):
         created_book = Book.objects.get(title=self.BOOK_TITLE)
         self.assertIsNotNone(created_book)
 
-    def test_create_book_with_initial(self):
+    def test_book_mixin_sets_type_in_query_param(self):
         response = self.client.get(
             f"{reverse('media:book_create')}?type=Comics"
         )
