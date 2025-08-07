@@ -1,5 +1,13 @@
 {% extends 'layouts/base_presentation.html' %}
 
+{% block title %}
+  {% if object %}
+    Update {{ media_name }}
+  {% else %}
+    Create {{ media_name }}
+  {% endif %}
+{% endblock %}
+
 {% block content %}
   <section>
     <div class="mt-7 page-header section-height-100">
