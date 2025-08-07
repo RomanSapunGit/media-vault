@@ -75,6 +75,12 @@ class PrivateViewTests(TestCase):
         new_book.save()
         book = Book.objects.get(pk=3)
 
+        response = self.client.get(reverse("media:book_list"))
+        self.assertIn(new_book, list(response.context["book_list"]))
+
+        self.assertIn("genre_filter_form", response.context)
+        self.assertIn("creators_filter_form", response.context)
+
         response = self.client.get(f"{reverse('media:book_list')}?type=Comics")
         self.assertEqual(list(response.context["book_list"]), [])
 
