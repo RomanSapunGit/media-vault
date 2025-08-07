@@ -1,8 +1,10 @@
+import datetime
+
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
 
-from media.models import Book
+from media.models import Book, Film
 
 
 class PublicTests(TestCase):
@@ -36,19 +38,37 @@ class PublicTests(TestCase):
 
 
 class PrivateBookViewTests(TestCase):
-    BOOK_TITLE = ("Animals Make Us Human: "
-                  "Creating the Best Life for Animals")
-    BOOK_DESCRIPTION = ("In her groundbreaking and "
-                        "best-selling book Animals in Translation, "
-                        "Temple Grandin drew on her own experience "
-                        "with autism as well as her distinguished "
-                        "career as an animal scientist to deliver "
-                        "extraordinary insights into how animals "
-                        "think, act, and feel. Now she builds on "
-                        "those insights to show us how to give "
-                        "our animals the best and happiest "
-                        "lifeon their terms, not ours.")
+    BOOK_TITLE = (
+        "Animals Make Us Human: Creating the Best Life for Animals"
+    )
+    BOOK_DESCRIPTION = (
+        "In her groundbreaking and best-selling book Animals in Translation, "
+        "Temple Grandin drew on her own experience with autism as well as her "
+        "distinguished career as an animal scientist to deliver extraordinary "
+        "insights into how animals think, act, and feel. Now she builds on "
+        "those insights to show us how to give our animals the best and happiest "
+        "life on their terms, not ours."
+    )
     BOOK_CREATED_AT = datetime.date(2009, 1, 6)
+
+    BOOK_LIST_URL_NAME = "media:book_list"
+    BOOK_CREATE_URL_NAME = "media:book_create"
+    BOOK_UPDATE_URL_NAME = "media:book_update"
+    BOOK_PK = 3
+
+    GENRE_FANTASY = "Fantasy"
+    GENRE_HORROR = "Horror"
+    CREATOR_JOANNE = "Joanne"
+    CREATOR_GEORGE = "George"
+    TYPE_COMICS = "Comics"
+    TYPE_INVALID = "wrong type"
+    TYPE_CS = "CS"
+    GENRES = "genres"
+    CREATORS = "creators"
+    TYPE = "type"
+    BOOK_LIST = "book_list"
+
+    fixtures = ["media_vault_db_data.json"]
 
     data = {
         "title": BOOK_TITLE,
@@ -59,8 +79,6 @@ class PrivateBookViewTests(TestCase):
         "type": "TB",
     }
 
-    fixtures = ["media_vault_db_data.json"]
-
     def setUp(self) -> None:
         user = get_user_model().objects.create_user(
             username="user", password="password"
@@ -69,101 +87,117 @@ class PrivateBookViewTests(TestCase):
         self.client.force_login(user)
 
     def test_book_list_exact(self):
-        response = self.client.get(reverse("media:book_list"))
+        response = self.client.get(reverse(self.BOOK_LIST_URL_NAME))
         self.assertEqual(response.status_code, 200)
 
-        book = Book.objects.get(pk=3)
-        self.assertEqual(list(response.context["book_list"]), [book])
+        book = Book.objects.get(pk=self.BOOK_PK)
+        self.assertEqual(list(response.context[self.BOOK_LIST]), [book])
 
     def test_book_list_search(self):
-        response = self.client.get(f"{reverse('media:book_list')}?title=7")
+        book = Book.objects.get(pk=self.BOOK_PK)
+
+        response = self.client.get(
+            f"{reverse(self.BOOK_LIST_URL_NAME)}?title=7"
+        )
         self.assertEqual(response.status_code, 200)
+        self.assertNotEqual(list(response.context[self.BOOK_LIST]), [book])
 
-        book = Book.objects.get(pk=3)
-
-        self.assertNotEqual(list(response.context["book_list"]), [book])
-
-        response = self.client.get(f"{reverse('media:book_list')}?title="
-                                   f"Harry Potter and the Philosopher's Stone")
-
-        self.assertEqual(list(response.context["book_list"]), [book])
-
-    def test_book_list_filter_with_wrong_query_shows_all_books(self):
-        response = self.client.get(f"{reverse('media:book_list')}?type=wrong+type")
-        self.assertEqual(response.status_code, 200)
-        self.assertNotEqual(list(response.context["book_list"]), [])
+        response = self.client.get(
+            f"{reverse(self.BOOK_LIST_URL_NAME)}?title=Harry+Potter+and+the+Philosopher's+Stone"
+        )
+        self.assertEqual(list(response.context[self.BOOK_LIST]), [book])
 
     def test_book_list_filter(self):
         new_book = Book(**self.data)
         new_book.save()
-        book = Book.objects.get(pk=3)
+        book = Book.objects.get(pk=self.BOOK_PK)
 
-        response = self.client.get(reverse("media:book_list"))
-        self.assertIn(new_book, list(response.context["book_list"]))
+        response = self.client.get(reverse(self.BOOK_LIST_URL_NAME))
+        self.assertIn(new_book, list(response.context[self.BOOK_LIST]))
 
         self.assertIn("genre_filter_form", response.context)
         self.assertIn("creators_filter_form", response.context)
 
-        response = self.client.get(f"{reverse('media:book_list')}?type=Comics")
-        self.assertEqual(list(response.context["book_list"]), [])
+        response = self.client.get(
+            f"{reverse(self.BOOK_LIST_URL_NAME)}?{self.TYPE}={self.TYPE_COMICS}"
+        )
+        self.assertEqual(list(response.context[self.BOOK_LIST]), [])
 
-        response = self.client.get(f"{reverse('media:book_list')}?genres=Fantasy")
-        self.assertEqual(list(response.context["book_list"]), [book])
+        response = self.client.get(
+            f"{reverse(self.BOOK_LIST_URL_NAME)}?{self.GENRES}={self.GENRE_FANTASY}"
+        )
+        self.assertEqual(list(response.context[self.BOOK_LIST]), [book])
 
-        response = self.client.get(f"{reverse('media:book_list')}?creators=Joanne")
-        self.assertEqual(list(response.context["book_list"]), [book])
+        response = self.client.get(
+            f"{reverse(self.BOOK_LIST_URL_NAME)}?{self.CREATORS}={self.CREATOR_JOANNE}"
+        )
+        self.assertEqual(list(response.context[self.BOOK_LIST]), [book])
 
-        response = self.client.get(f"{reverse('media:book_list')}?type=wrong+type")
+        response = self.client.get(
+            f"{reverse(self.BOOK_LIST_URL_NAME)}?{self.TYPE}={self.TYPE_INVALID}"
+        )
         self.assertEqual(response.status_code, 200)
-        self.assertNotEqual(list(response.context["book_list"]), [])
+        self.assertNotEqual(list(response.context[self.BOOK_LIST]), [])
 
-        response = self.client.get(f"{reverse('media:book_list')}?genres=Fantasy&creators=Joanne")
-        self.assertEqual(list(response.context["book_list"]), [book])
+        response = self.client.get(
+            f"{reverse(self.BOOK_LIST_URL_NAME)}?"
+            f"{self.GENRES}={self.GENRE_FANTASY}"
+            f"&{self.CREATORS}={self.CREATOR_JOANNE}"
+        )
+        self.assertEqual(list(response.context[self.BOOK_LIST]), [book])
 
-        response = self.client.get(f"{reverse('media:book_list')}?genres=Fantasy&creators=George")
+        response = self.client.get(
+            f"{reverse(self.BOOK_LIST_URL_NAME)}?"
+            f"{self.GENRES}={self.GENRE_FANTASY}"
+            f"&{self.CREATORS}={self.CREATOR_GEORGE}"
+        )
         creators_form = response.context["creators_filter_form"]
         self.assertFalse(creators_form.is_valid())
-        self.assertEqual(list(response.context["book_list"]), [book])
+        self.assertEqual(list(response.context[self.BOOK_LIST]), [book])
 
-        response = self.client.get(f"{reverse('media:book_list')}?genres=Horror&creators=Joanne")
-        creators_form = response.context["genre_filter_form"]
-        self.assertFalse(creators_form.is_valid())
-        self.assertEqual(list(response.context["book_list"]), [book])
+        response = self.client.get(
+            f"{reverse(self.BOOK_LIST_URL_NAME)}?"
+            f"{self.GENRES}={self.GENRE_HORROR}&"
+            f"{self.CREATORS}={self.CREATOR_JOANNE}"
+        )
+        genre_form = response.context["genre_filter_form"]
+        self.assertFalse(genre_form.is_valid())
+        self.assertEqual(list(response.context[self.BOOK_LIST]), [book])
 
     def test_create_book(self):
-
-        response = self.client.post(
-            reverse("media:book_create"),
-            self.data
-        )
+        response = self.client.post(reverse(self.BOOK_CREATE_URL_NAME), self.data)
         self.assertIsNotNone(response.context["form"].errors)
 
-        self.data.update({"genres": 1})
-        response = self.client.post(
-            reverse("media:book_create"),
-            self.data
-        )
+        self.data.update({self.GENRES: 1})
+        response = self.client.post(reverse(self.BOOK_CREATE_URL_NAME), self.data)
 
         self.assertEqual(response.status_code, 302)
         created_book = Book.objects.get(title=self.BOOK_TITLE)
         self.assertIsNotNone(created_book)
 
+        self.data.pop(self.GENRES)
+
     def test_book_mixin_sets_type_in_query_param(self):
         response = self.client.get(
-            f"{reverse('media:book_create')}?type=Comics"
+            f"{reverse(self.BOOK_CREATE_URL_NAME)}?{self.TYPE}={self.TYPE_COMICS}"
         )
         self.assertEqual(
-            "CS",
-            response.context["form"].initial.get("type")
+            self.TYPE_CS, response.context["form"].initial.get(self.TYPE)
         )
 
     def test_book_update_view(self):
-        book = Book.objects.get(pk=3)
+        book = Book.objects.get(pk=self.BOOK_PK)
         response = self.client.post(
-            reverse("media:book_update", args=[book.pk]),
-            {"title": "Updated Title", "description": book.description,
-             "created_at": book.created_at, "created_by": book.created_by,
-             "chapters": book.chapters, "type": book.type, "genres": 1}
+            reverse(self.BOOK_UPDATE_URL_NAME, args=[book.pk]),
+            {
+                "title": "Updated Title",
+                "description": book.description,
+                "created_at": book.created_at,
+                "created_by": book.created_by,
+                "chapters": book.chapters,
+                "type": book.type,
+                "genres": 1,
+            },
         )
         self.assertEqual(response.status_code, 302)
         book.refresh_from_db()
