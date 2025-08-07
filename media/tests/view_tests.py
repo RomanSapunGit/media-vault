@@ -111,6 +111,18 @@ class PrivateViewTests(TestCase):
             response.context["form"].initial.get("type")
         )
 
+    def test_book_update_view(self):
+        book = Book.objects.get(pk=3)
+        response = self.client.post(
+            reverse("media:book_update", args=[book.pk]),
+            {"title": "Updated Title", "description": book.description,
+             "created_at": book.created_at, "created_by": book.created_by,
+             "chapters": book.chapters, "type": book.type, "genres": 1}
+        )
+        self.assertEqual(response.status_code, 302)
+        book.refresh_from_db()
+        self.assertEqual(book.title, "Updated Title")
+
 
 class PrivateFilmViewTests(TestCase):
     FILM_TITLE = ("Animals Make Us Human: "
