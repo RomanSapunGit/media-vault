@@ -35,7 +35,30 @@ class PublicTests(TestCase):
         self.assertNotEqual(response.status_code, 200)
 
 
-class PrivateViewTests(TestCase):
+class PrivateBookViewTests(TestCase):
+    BOOK_TITLE = ("Animals Make Us Human: "
+                  "Creating the Best Life for Animals")
+    BOOK_DESCRIPTION = ("In her groundbreaking and "
+                        "best-selling book Animals in Translation, "
+                        "Temple Grandin drew on her own experience "
+                        "with autism as well as her distinguished "
+                        "career as an animal scientist to deliver "
+                        "extraordinary insights into how animals "
+                        "think, act, and feel. Now she builds on "
+                        "those insights to show us how to give "
+                        "our animals the best and happiest "
+                        "lifeon their terms, not ours.")
+    BOOK_CREATED_AT = datetime.date(2009, 1, 6)
+
+    data = {
+        "title": BOOK_TITLE,
+        "description": BOOK_DESCRIPTION,
+        "created_at": BOOK_CREATED_AT,
+        "created_by": "user",
+        "chapters": 1,
+        "type": "TB",
+    }
+
     fixtures = ["media_vault_db_data.json"]
 
     def setUp(self) -> None:
