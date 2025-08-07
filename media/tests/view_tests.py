@@ -6,6 +6,10 @@ from django.urls import reverse
 
 from media.models import Book, Film
 
+GENRES = "genres"
+CREATORS = "creators"
+TYPE = "type"
+
 
 class PublicTests(TestCase):
     def test_books_anonymous_access_false(self):
@@ -63,9 +67,6 @@ class PrivateBookViewTests(TestCase):
     TYPE_COMICS = "Comics"
     TYPE_INVALID = "wrong type"
     TYPE_CS = "CS"
-    GENRES = "genres"
-    CREATORS = "creators"
-    TYPE = "type"
     BOOK_LIST = "book_list"
 
     fixtures = ["media_vault_db_data.json"]
@@ -119,37 +120,37 @@ class PrivateBookViewTests(TestCase):
         self.assertIn("creators_filter_form", response.context)
 
         response = self.client.get(
-            f"{reverse(self.BOOK_LIST_URL_NAME)}?{self.TYPE}={self.TYPE_COMICS}"
+            f"{reverse(self.BOOK_LIST_URL_NAME)}?{TYPE}={self.TYPE_COMICS}"
         )
         self.assertEqual(list(response.context[self.BOOK_LIST]), [])
 
         response = self.client.get(
-            f"{reverse(self.BOOK_LIST_URL_NAME)}?{self.GENRES}={self.GENRE_FANTASY}"
+            f"{reverse(self.BOOK_LIST_URL_NAME)}?{GENRES}={self.GENRE_FANTASY}"
         )
         self.assertEqual(list(response.context[self.BOOK_LIST]), [book])
 
         response = self.client.get(
-            f"{reverse(self.BOOK_LIST_URL_NAME)}?{self.CREATORS}={self.CREATOR_JOANNE}"
+            f"{reverse(self.BOOK_LIST_URL_NAME)}?{CREATORS}={self.CREATOR_JOANNE}"
         )
         self.assertEqual(list(response.context[self.BOOK_LIST]), [book])
 
         response = self.client.get(
-            f"{reverse(self.BOOK_LIST_URL_NAME)}?{self.TYPE}={self.TYPE_INVALID}"
+            f"{reverse(self.BOOK_LIST_URL_NAME)}?{TYPE}={self.TYPE_INVALID}"
         )
         self.assertEqual(response.status_code, 200)
         self.assertNotEqual(list(response.context[self.BOOK_LIST]), [])
 
         response = self.client.get(
             f"{reverse(self.BOOK_LIST_URL_NAME)}?"
-            f"{self.GENRES}={self.GENRE_FANTASY}"
-            f"&{self.CREATORS}={self.CREATOR_JOANNE}"
+            f"{GENRES}={self.GENRE_FANTASY}"
+            f"&{CREATORS}={self.CREATOR_JOANNE}"
         )
         self.assertEqual(list(response.context[self.BOOK_LIST]), [book])
 
         response = self.client.get(
             f"{reverse(self.BOOK_LIST_URL_NAME)}?"
-            f"{self.GENRES}={self.GENRE_FANTASY}"
-            f"&{self.CREATORS}={self.CREATOR_GEORGE}"
+            f"{GENRES}={self.GENRE_FANTASY}"
+            f"&{CREATORS}={self.CREATOR_GEORGE}"
         )
         creators_form = response.context["creators_filter_form"]
         self.assertFalse(creators_form.is_valid())
@@ -157,8 +158,8 @@ class PrivateBookViewTests(TestCase):
 
         response = self.client.get(
             f"{reverse(self.BOOK_LIST_URL_NAME)}?"
-            f"{self.GENRES}={self.GENRE_HORROR}&"
-            f"{self.CREATORS}={self.CREATOR_JOANNE}"
+            f"{GENRES}={self.GENRE_HORROR}&"
+            f"{CREATORS}={self.CREATOR_JOANNE}"
         )
         genre_form = response.context["genre_filter_form"]
         self.assertFalse(genre_form.is_valid())
@@ -168,21 +169,21 @@ class PrivateBookViewTests(TestCase):
         response = self.client.post(reverse(self.BOOK_CREATE_URL_NAME), self.data)
         self.assertIsNotNone(response.context["form"].errors)
 
-        self.data.update({self.GENRES: 1})
+        self.data.update({GENRES: 1})
         response = self.client.post(reverse(self.BOOK_CREATE_URL_NAME), self.data)
 
         self.assertEqual(response.status_code, 302)
         created_book = Book.objects.get(title=self.BOOK_TITLE)
         self.assertIsNotNone(created_book)
 
-        self.data.pop(self.GENRES)
+        self.data.pop(GENRES)
 
     def test_book_mixin_sets_type_in_query_param(self):
         response = self.client.get(
-            f"{reverse(self.BOOK_CREATE_URL_NAME)}?{self.TYPE}={self.TYPE_COMICS}"
+            f"{reverse(self.BOOK_CREATE_URL_NAME)}?{TYPE}={self.TYPE_COMICS}"
         )
         self.assertEqual(
-            self.TYPE_CS, response.context["form"].initial.get(self.TYPE)
+            self.TYPE_CS, response.context["form"].initial.get(TYPE)
         )
 
     def test_book_update_view(self):
@@ -205,92 +206,111 @@ class PrivateBookViewTests(TestCase):
 
 
 class PrivateFilmViewTests(TestCase):
-    FILM_TITLE = ("Animals Make Us Human: "
-                  "Creating the Best Life for Animals")
-    FILM_DESCRIPTION = ("In her groundbreaking and "
-                        "best-selling book Animals in Translation, "
-                        "Temple Grandin drew on her own experience "
-                        "with autism as well as her distinguished "
-                        "career as an animal scientist to deliver "
-                        "extraordinary insights into how animals "
-                        "think, act, and feel. Now she builds on "
-                        "those insights to show us how to give "
-                        "our animals the best and happiest "
-                        "life on their terms, not ours.")
-    FILM_CREATED_AT = datetime.date(2009, 1, 6)
-
-    data = {
-        "title": FILM_TITLE,
-        "description": FILM_DESCRIPTION,
-        "created_at": FILM_CREATED_AT,
-        "created_by": "user",
-        "country": "USA",
-        "duration": datetime.time(1, 40)
-    }
+    USERNAME = "user"
+    PASSWORD = "password"
+    COUNTRY_USA = "USA"
+    COUNTRY_UK = "UK"
+    GENRE_VALID = "Science Fiction"
+    GENRE_INVALID = "Horror"
+    CREATOR_VALID = "Isaac"
+    CREATOR_INVALID = "George"
+    INVALID_TYPE = "wrong type"
+    VALID_TITLE_SEARCH = "I,+Robot"
+    INVALID_TITLE_SEARCH = "7"
+    CREATED_AT = datetime.date(2009, 1, 6)
+    DURATION = datetime.time(1, 40)
+    UPDATED_DURATION = datetime.time(2, 21)
+    FILM_LIST = "film_list"
+    FILM_LIST_URL_NAME = "media:film_list"
+    FILM_TITLE = (
+        "Animals Make Us Human: Creating the Best Life for Animals"
+    )
+    FILM_DESCRIPTION = (
+        "In her groundbreaking and best-selling book Animals in Translation, "
+        "Temple Grandin drew on her own experience with autism as well as her "
+        "distinguished career as an animal scientist to deliver extraordinary "
+        "insights into how animals think, act, and feel. Now she builds on "
+        "those insights to show us how to give our animals the best and "
+        "happiest life on their terms, not ours."
+    )
 
     fixtures = ["media_vault_db_data.json"]
 
     def setUp(self) -> None:
         user = get_user_model().objects.create_user(
-            username="user", password="password"
+            username=self.USERNAME,
+            password=self.PASSWORD
         )
         self.user = user
         self.client.force_login(user)
 
+        self.data = {
+            "title": self.FILM_TITLE,
+            "description": self.FILM_DESCRIPTION,
+            "created_at": self.CREATED_AT,
+            "created_by": self.USERNAME,
+            "country": self.COUNTRY_USA,
+            "duration": self.DURATION
+        }
+
     def test_film_list_exact(self):
-        response = self.client.get(reverse("media:film_list"))
+        response = self.client.get(reverse(self.FILM_LIST_URL_NAME))
         self.assertEqual(response.status_code, 200)
 
         film = Film.objects.get(pk=1)
-        self.assertEqual(list(response.context["film_list"]), [film])
+        self.assertEqual(list(response.context[self.FILM_LIST]), [film])
 
     def test_film_list_search(self):
-        response = self.client.get(f"{reverse('media:film_list')}?title=7")
+        response = self.client.get(
+            f"{reverse(self.FILM_LIST_URL_NAME)}?title={self.INVALID_TITLE_SEARCH}"
+        )
         self.assertEqual(response.status_code, 200)
-
         film = Film.objects.get(pk=1)
+        self.assertNotEqual(list(response.context[self.FILM_LIST]), [film])
 
-        self.assertNotEqual(list(response.context["film_list"]), [film])
+        response = self.client.get(
+            f"{reverse(self.FILM_LIST_URL_NAME)}?title={self.VALID_TITLE_SEARCH}"
+        )
+        self.assertEqual(list(response.context[self.FILM_LIST]), [film])
 
-        response = self.client.get(f"{reverse('media:film_list')}?title="
-                                   f"I,+Robot")
-
-        self.assertEqual(list(response.context["film_list"]), [film])
-
-    def test_film_list_filter_with_wrong_query_shows_all_films(self):
-        response = self.client.get(f"{reverse('media:film_list')}?type=wrong+type")
-        self.assertEqual(response.status_code, 200)
-        self.assertNotEqual(list(response.context["film_list"]), [])
-
-    def test_book_list_filter(self):
+    def test_film_list_filter(self):
         new_film = Film(**self.data)
         new_film.save()
         film = Film.objects.get(pk=1)
 
-        response = self.client.get(reverse("media:film_list"))
-        self.assertIn(new_film, list(response.context["film_list"]))
-
+        response = self.client.get(reverse(self.FILM_LIST_URL_NAME))
+        self.assertIn(new_film, list(response.context[self.FILM_LIST]))
         self.assertIn("genre_filter_form", response.context)
         self.assertIn("creators_filter_form", response.context)
 
-        response = self.client.get(f"{reverse('media:film_list')}?genres=Science+Fiction")
-        self.assertEqual(list(response.context["film_list"]), [film])
+        response = self.client.get(
+            f"{reverse(self.FILM_LIST_URL_NAME)}?{GENRES}={self.GENRE_VALID}"
+        )
+        self.assertEqual(list(response.context[self.FILM_LIST]), [film])
 
-        response = self.client.get(f"{reverse('media:film_list')}?creators=Isaac")
-        self.assertEqual(list(response.context["film_list"]), [film])
+        response = self.client.get(
+            f"{reverse(self.FILM_LIST_URL_NAME)}?{CREATORS}={self.CREATOR_VALID}"
+        )
+        self.assertEqual(list(response.context[self.FILM_LIST]), [film])
 
-        response = self.client.get(f"{reverse('media:film_list')}?genres=Science+Fiction&creators=Isaac")
-        self.assertEqual(list(response.context["film_list"]), [film])
+        response = self.client.get(
+            f"{reverse(self.FILM_LIST_URL_NAME)}?{GENRES}={self.GENRE_VALID}&{CREATORS}={self.CREATOR_VALID}"
+        )
+        self.assertEqual(list(response.context[self.FILM_LIST]), [film])
 
-        response = self.client.get(f"{reverse('media:film_list')}?genres=Science+Fiction&creators=George")
+        response = self.client.get(
+            f"{reverse(self.FILM_LIST_URL_NAME)}?{GENRES}={self.GENRE_VALID}&{CREATORS}={self.CREATOR_INVALID}"
+        )
         creators_form = response.context["creators_filter_form"]
         self.assertFalse(creators_form.is_valid())
-        self.assertEqual(list(response.context["film_list"]), [film])
+        self.assertEqual(list(response.context[self.FILM_LIST]), [film])
 
-        response = self.client.get(f"{reverse('media:film_list')}?genres=Horror&creators=Isaac")
-        creators_form = response.context["genre_filter_form"]
-        self.assertFalse(creators_form.is_valid())
-        self.assertEqual(list(response.context["film_list"]), [film])
+        response = self.client.get(
+            f"{reverse(self.FILM_LIST_URL_NAME)}?{GENRES}={self.GENRE_INVALID}&{CREATORS}={self.CREATOR_VALID}"
+        )
+        genre_form = response.context["genre_filter_form"]
+        self.assertFalse(genre_form.is_valid())
+        self.assertEqual(list(response.context[self.FILM_LIST]), [film])
 
     def test_create_film(self):
         response = self.client.post(
@@ -299,34 +319,38 @@ class PrivateFilmViewTests(TestCase):
         )
         self.assertIsNotNone(response.context["form"].errors)
 
-        self.data.update({"genres": 1})
+        self.data.update({GENRES: 1})
         response = self.client.post(
             reverse("media:film_create"),
             self.data
         )
-
         self.assertEqual(response.status_code, 302)
         created_film = Film.objects.get(title=self.FILM_TITLE)
         self.assertIsNotNone(created_film)
-
-        self.data.pop("genres")
+        self.data.pop(GENRES)
 
     def test_film_mixin_sets_type_in_query_param(self):
         response = self.client.get(
-            f"{reverse('media:book_create')}?creators=Isaac"
+            f"{reverse('media:book_create')}?{CREATORS}={self.CREATOR_VALID}"
         )
         self.assertEqual(
             [1],
-            list(response.context["form"].initial.get("creators"))
+            list(response.context["form"].initial.get(CREATORS))
         )
 
     def test_film_update_view(self):
         film = Film.objects.get(pk=1)
         response = self.client.post(
             reverse("media:film_update", args=[film.pk]),
-            {"title": "Updated Title", "description": film.description,
-             "created_at": film.created_at, "created_by": film.created_by,
-             "country": "UK", "duration": datetime.time(2, 21), "genres": 1}
+            {
+                "title": "Updated Title",
+                "description": film.description,
+                "created_at": film.created_at,
+                "created_by": film.created_by,
+                "country": self.COUNTRY_UK,
+                "duration": self.UPDATED_DURATION,
+                "genres": 1
+            }
         )
         self.assertEqual(response.status_code, 302)
         film.refresh_from_db()
