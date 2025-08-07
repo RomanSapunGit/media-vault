@@ -7,3 +7,4 @@ sqlparse==0.4.2
 toml==0.10.2
 django-environ==0.8.1
 django-debug-toolbar
+coverage
