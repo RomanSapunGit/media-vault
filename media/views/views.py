@@ -88,6 +88,11 @@ class CreatorCreateView(LoginRequiredMixin, generic.CreateView):
             return JsonResponse({'success': False, 'form_html': html})
         return super().form_invalid(form)
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["media_name"] = "creator"
+        return context
+
 
 class CreatorDeleteView(LoginRequiredMixin, generic.DeleteView):
     model = Creator
