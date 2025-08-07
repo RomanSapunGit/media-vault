@@ -90,6 +90,23 @@ class PrivateViewTests(TestCase):
         response = self.client.get(f"{reverse('media:book_list')}?creators=Joanne")
         self.assertEqual(list(response.context["book_list"]), [book])
 
+        response = self.client.get(f"{reverse('media:book_list')}?type=wrong+type")
+        self.assertEqual(response.status_code, 200)
+        self.assertNotEqual(list(response.context["book_list"]), [])
+
+        response = self.client.get(f"{reverse('media:book_list')}?genres=Fantasy&creators=Joanne")
+        self.assertEqual(list(response.context["book_list"]), [book])
+
+        response = self.client.get(f"{reverse('media:book_list')}?genres=Fantasy&creators=George")
+        creators_form = response.context["creators_filter_form"]
+        self.assertFalse(creators_form.is_valid())
+        self.assertEqual(list(response.context["book_list"]), [book])
+
+        response = self.client.get(f"{reverse('media:book_list')}?genres=Horror&creators=Joanne")
+        creators_form = response.context["genre_filter_form"]
+        self.assertFalse(creators_form.is_valid())
+        self.assertEqual(list(response.context["book_list"]), [book])
+
     def test_create_book(self):
 
         response = self.client.post(
