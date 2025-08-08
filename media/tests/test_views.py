@@ -487,3 +487,32 @@ class PrivateRatingViewTests(TestCase):
             reverse("media:rating_detail", args=[rating.pk])
         )
         self.assertEqual(rating.rating, 3)
+
+
+class PrivateUserViewTests(TestCase):
+    fixtures = ["media_vault_db_data.json"]
+    USER_LIST = "user_list"
+
+    def setUp(self) -> None:
+        user = get_user_model().objects.create_user(
+            username="user", password="password"
+        )
+        self.user = user
+        self.client.force_login(user)
+
+    def test_user_search_filters_correctly(self):
+        response = self.client.get(f"{reverse('media:user_list')}?username=Tom")
+        all_users = UserMediaRating.objects.all()
+
+        self.assertNotEqual(response.context[self.USER_LIST], all_users)
+        self.assertEqual(len(response.context[self.USER_LIST]), 1)
+
+    def test_detail_view_not_shows_hidden_ratings(self):
+        response = self.client.get(reverse(
+            "media:user_detail",
+            kwargs={"pk": 1})
+        )
+        user = response.context["object"]
+
+        for media_rating in user.media_ratings.all():
+            self.assertFalse(media_rating.is_hidden)
