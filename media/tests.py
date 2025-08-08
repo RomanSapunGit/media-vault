@@ -516,3 +516,81 @@ class PrivateUserViewTests(TestCase):
 
         for media_rating in user.media_ratings.all():
             self.assertFalse(media_rating.is_hidden)
+
+
+class PrivateViewTests(TestCase):
+    fixtures = ["media_vault_db_data.json"]
+
+    INDEX_URL = reverse("media:index")
+    CREATOR_CREATE_URL = reverse("media:creator_create")
+    CREATOR_LIST_URL = reverse("media:creator_list")
+    JSON_TYPE = "application/json"
+
+    VALID_CREATOR_DATA = {
+        "first_name": "New",
+        "last_name": "Creator",
+        "birth_date": datetime.date(2000, 12, 2)
+    }
+
+    REQUIRED_FIELD_ERRORS = [
+        "The field First name is required",
+        "The field Last name is required",
+        "The field Birth date is required"
+    ]
+
+    def setUp(self) -> None:
+        user = get_user_model().objects.create_user(
+            username="user", password="password"
+        )
+        self.user = user
+        self.client.force_login(user)
+
+    def test_index_shows_count_correctly(self):
+        response = self.client.get(self.INDEX_URL)
+        self.assertEqual(response.context["media_users_count"], 3)
+        self.assertEqual(response.context["media_titles_count"], 3)
+        self.assertEqual(response.context["media_ratings_count"], 3)
+
+    def test_creator_create_view_success(self):
+        response = self.client.post(
+            self.CREATOR_CREATE_URL,
+            data=self.VALID_CREATOR_DATA
+        )
+        self.assertRedirects(response, self.CREATOR_LIST_URL)
+        self.assertTrue(Creator.objects.filter(first_name="New").exists())
+
+    def test_creator_create_view_failure(self):
+        invalid_data = self.VALID_CREATOR_DATA.copy()
+        invalid_data.pop("last_name")
+        response = self.client.post(self.CREATOR_CREATE_URL, data=invalid_data)
+        self.assertFalse(response.context["form"].is_valid())
+
+    def test_creator_create_view_ajax_valid(self):
+        response = self.client.post(
+            self.CREATOR_CREATE_URL,
+            data=self.VALID_CREATOR_DATA,
+            HTTP_X_REQUESTED_WITH="XMLHttpRequest"
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response["Content-Type"], self.JSON_TYPE)
+
+        json_data = response.json()
+        self.assertTrue(json_data["success"])
+        self.assertIn("author", json_data)
+        self.assertEqual(json_data["author"]["name"], "New Creator")
+
+    def test_creator_create_view_ajax_invalid(self):
+        response = self.client.post(
+            self.CREATOR_CREATE_URL,
+            data={},
+            HTTP_X_REQUESTED_WITH="XMLHttpRequest"
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response["Content-Type"], self.JSON_TYPE)
+
+        json_data = response.json()
+        self.assertFalse(json_data["success"])
+        self.assertIn("form_html", json_data)
+
+        for error in self.REQUIRED_FIELD_ERRORS:
+            self.assertIn(error, json_data["form_html"])
