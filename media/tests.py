@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
 
-from media.models import Book, Film, Series
+from media.models import Book, Film, Series, UserMediaRating, Creator
 
 GENRES = "genres"
 CREATORS = "creators"
