@@ -26,7 +26,6 @@ class RegisterViewTests(TestCase):
                 "password2": "%amgf83501767"
             }
         )
-        print(response.context["form"])
         self.assertFalse(response.context["form"].is_valid())
 
         self.assertEqual(
