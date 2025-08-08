@@ -355,3 +355,74 @@ class PrivateFilmViewTests(TestCase):
         self.assertEqual(response.status_code, 302)
         film.refresh_from_db()
         self.assertEqual(film.title, "Updated Title")
+
+
+class PrivateSeriesViewTests(TestCase):
+    fixtures = ["media_vault_db_data.json"]
+
+    CONTEXT_FORM = "form"
+    CONTEXT_STATUS_CHOICES = "status_choices"
+    CONTEXT_SERIES_LIST = "series_list"
+
+    URL_SERIES_LIST = "media:series_list"
+    URL_SERIES_UPDATE = "media:series_update"
+
+    QUERY_PARAM_STATUS = "status"
+
+    STATUS_FINISHED = "Finished"
+    STATUS_IN_PROGRESS = "In progress"
+    STATUS_DROPPED = "Dropped"
+    STATUS_DB_VALUE = "F"
+
+    TYPE_ANIME = "Anime"
+    TYPE_DB_VALUE = "AE"
+
+    data = {
+        "title": "Attack on Titan",
+        "description": (
+            "In a world where humanity is on the brink of extinction, "
+            "young soldiers fight giant humanoid creatures known as Titans."
+        ),
+        "created_at": "2013-04-07",
+        "created_by": "bob",
+        "media_type": "Series",
+        "seasons": 4,
+        "series_number": 48
+    }
+
+    def setUp(self) -> None:
+        user = get_user_model().objects.create_user(
+            username="user", password="password"
+        )
+        self.user = user
+        self.client.force_login(user)
+
+    def test_series_list_filter(self):
+        new_series = Series(**self.data)
+        new_series.save()
+
+        url = f"{reverse(self.URL_SERIES_LIST)}?{self.QUERY_PARAM_STATUS}={self.STATUS_FINISHED}"
+        response = self.client.get(url)
+
+        self.assertNotEqual(list(response.context[self.CONTEXT_SERIES_LIST]), [])
+        self.assertNotIn(new_series, response.context[self.CONTEXT_SERIES_LIST])
+
+    def test_context_set_correctly(self):
+        expected_statuses = [
+            self.STATUS_FINISHED,
+            self.STATUS_IN_PROGRESS,
+            self.STATUS_DROPPED,
+        ]
+
+        response = self.client.get(reverse(self.URL_SERIES_LIST))
+        self.assertEqual(expected_statuses, response.context[self.CONTEXT_STATUS_CHOICES])
+
+    def test_series_update_sets_status_and_type_correctly(self):
+        url = reverse(self.URL_SERIES_UPDATE, kwargs={"pk": 2})
+        url += f"?{TYPE}={self.TYPE_ANIME}&{self.QUERY_PARAM_STATUS}={self.STATUS_FINISHED}"
+
+        response = self.client.get(url)
+
+        form_initial = response.context[self.CONTEXT_FORM].initial
+        self.assertEqual(self.TYPE_DB_VALUE, form_initial.get(TYPE))
+        self.assertEqual(self.STATUS_DB_VALUE, form_initial.get(self.QUERY_PARAM_STATUS))
