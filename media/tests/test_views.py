@@ -426,3 +426,64 @@ class PrivateSeriesViewTests(TestCase):
         form_initial = response.context[self.CONTEXT_FORM].initial
         self.assertEqual(self.TYPE_DB_VALUE, form_initial.get(TYPE))
         self.assertEqual(self.STATUS_DB_VALUE, form_initial.get(self.QUERY_PARAM_STATUS))
+
+
+class PrivateRatingViewTests(TestCase):
+    fixtures = ["media_vault_db_data.json"]
+
+    def setUp(self) -> None:
+        user = get_user_model().objects.create_user(
+            username="user", password="password"
+        )
+        self.user = user
+        self.client.force_login(user)
+
+    def test_rating_delete_view_success_url(self):
+        response = self.client.post(
+            reverse('media:rating_delete', kwargs={'pk': 1}),
+            data={"next": "/users/1/"}
+        )
+        self.assertEqual(response.url, "/users/1/")
+
+        response = self.client.post(
+            reverse('media:rating_delete', kwargs={'pk': 2})
+        )
+        self.assertEqual(response.url, "/ratings/")
+
+    def test_rating_update_success_url_with_next_param(self):
+        rating = UserMediaRating.objects.get(pk=1)
+        url = reverse(
+            "media:rating_update",
+            kwargs={"pk": rating.pk}
+        )
+        response = self.client.post(
+            f"{url}?next=/&user_id={self.user.pk}",
+            {
+                "rating": 5.0,
+                "media": 1
+             }
+        )
+        rating.refresh_from_db()
+        self.assertRedirects(
+            response,
+            reverse("media:user_detail", args=[self.user.pk])
+        )
+        self.assertEqual(rating.rating, 5)
+
+    def test_rating_update_success_url_without_next_param(self):
+        rating = UserMediaRating.objects.get(pk=1)
+        url = reverse("media:rating_update", kwargs={"pk": rating.pk})
+        response = self.client.post(
+            url,
+            {
+                "rating": 3.0,
+                "media": 1
+            }
+        )
+
+        rating.refresh_from_db()
+        self.assertRedirects(
+            response,
+            reverse("media:rating_detail", args=[rating.pk])
+        )
+        self.assertEqual(rating.rating, 3)
