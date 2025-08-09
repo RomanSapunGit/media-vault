@@ -30,7 +30,7 @@
                   {{ form.as_p }}
 
 
-                <input type="hidden" name="next" value="{{ request.path }}">
+                  <input type="hidden" name="next" value="{{ request.path }}">
 
                   <div class="text-center">
                     <button type="submit" name="login"
@@ -210,7 +210,7 @@
           </div>
         </div>
       </div>
-    {% include 'media/form/modal/create_author_modal.html' %}
+      {% include 'media/form/modal/create_author_modal.html' %}
     </div>
   </section>
 {% endblock %}
