@@ -105,9 +105,13 @@ class MediaListMixin:
         if not hasattr(self, "_filter_forms"):
             self._filter_forms = {
                 "genre_filter_form":
-                    GenreFilterForm(query_params) if "genres" in query_params else GenreFilterForm(),
+                    GenreFilterForm(query_params)
+                    if "genres" in query_params
+                    else GenreFilterForm(),
                 "creators_filter_form":
-                    CreatorFilterForm(query_params) if "creators" in query_params else CreatorFilterForm(),
+                    CreatorFilterForm(query_params)
+                    if "creators" in query_params
+                    else CreatorFilterForm(),
             }
         return self._filter_forms
 
