@@ -24,6 +24,7 @@ class BookListView(
     search_form = MediaSearchForm
     url_create = reverse_lazy("media:book_create")
 
+
 class BookDetailView(LoginRequiredMixin, generic.DetailView):
     model = Book
     template_name = "media/detail/book_detail.html"
