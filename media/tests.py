@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
 
-from media.models import Book, Film, Series, UserMediaRating, Creator
+from media.models import Book, Film, Series, UserMediaRating, Creator, Media
 
 GENRES = "genres"
 CREATORS = "creators"
@@ -264,9 +264,9 @@ class PrivateFilmViewTests(TestCase):
         response = self.client.get(reverse(self.FILM_LIST_URL_NAME))
         self.assertEqual(response.status_code, 200)
 
-        film = Film.objects.get(pk=1)
+        films = Film.objects.all()
         self.assertEqual(
-            list(response.context[self.FILM_LIST]), [film]
+            list(response.context[self.FILM_LIST]), list(films)
         )
 
     def test_film_list_search(self):
@@ -287,8 +287,8 @@ class PrivateFilmViewTests(TestCase):
     def test_film_list_filter(self):
         new_film = Film(**self.data)
         new_film.save()
-        film = Film.objects.get(pk=1)
-
+        film1 = Film.objects.get(pk=1)
+        film2 = Film.objects.get(pk=4)
         response = self.client.get(reverse(self.FILM_LIST_URL_NAME))
         self.assertIn(new_film, list(response.context[self.FILM_LIST]))
         self.assertIn("genre_filter_form", response.context)
@@ -297,13 +297,13 @@ class PrivateFilmViewTests(TestCase):
         response = self.client.get(
             f"{reverse(self.FILM_LIST_URL_NAME)}?{GENRES}={self.GENRE_VALID}"
         )
-        self.assertEqual(list(response.context[self.FILM_LIST]), [film])
+        self.assertEqual(list(response.context[self.FILM_LIST]), [film1, film2])
 
         response = self.client.get(
             f"{reverse(self.FILM_LIST_URL_NAME)}"
             f"?{CREATORS}={self.CREATOR_VALID}"
         )
-        self.assertEqual(list(response.context[self.FILM_LIST]), [film])
+        self.assertEqual(list(response.context[self.FILM_LIST]), [film1])
 
         response = self.client.get(
             f"{reverse(self.FILM_LIST_URL_NAME)}"
@@ -311,7 +311,7 @@ class PrivateFilmViewTests(TestCase):
             f"&{CREATORS}={self.CREATOR_VALID}"
         )
         self.assertEqual(
-            list(response.context[self.FILM_LIST]), [film]
+            list(response.context[self.FILM_LIST]), [film1]
         )
 
         response = self.client.get(
@@ -321,7 +321,7 @@ class PrivateFilmViewTests(TestCase):
         )
         creators_form = response.context["creators_filter_form"]
         self.assertFalse(creators_form.is_valid())
-        self.assertEqual(list(response.context[self.FILM_LIST]), [film])
+        self.assertEqual(list(response.context[self.FILM_LIST]), [film1, film2])
 
         response = self.client.get(
             f"{reverse(self.FILM_LIST_URL_NAME)}"
@@ -330,7 +330,7 @@ class PrivateFilmViewTests(TestCase):
         )
         genre_form = response.context["genre_filter_form"]
         self.assertFalse(genre_form.is_valid())
-        self.assertEqual(list(response.context[self.FILM_LIST]), [film])
+        self.assertEqual(list(response.context[self.FILM_LIST]), [film1])
 
     def test_create_film(self):
         response = self.client.post(
@@ -584,9 +584,12 @@ class PrivateViewTests(TestCase):
 
     def test_index_shows_count_correctly(self):
         response = self.client.get(self.INDEX_URL)
-        self.assertEqual(response.context["media_users_count"], 3)
-        self.assertEqual(response.context["media_titles_count"], 3)
-        self.assertEqual(response.context["media_ratings_count"], 3)
+        media_users_count = get_user_model().objects.count()
+        titles = Media.objects.all().count()
+        ratings = UserMediaRating.objects.all().count()
+        self.assertEqual(response.context["media_users_count"], media_users_count)
+        self.assertEqual(response.context["media_titles_count"], titles)
+        self.assertEqual(response.context["media_ratings_count"], ratings)
 
     def test_creator_create_view_success(self):
         response = self.client.post(
