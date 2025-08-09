@@ -58,6 +58,10 @@ class CreatorListView(
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["media_type"] = "creator"
+        context["no_media_with_creator"] = any(
+            creator.media_type_count
+            for creator in context["creator_list"]
+        )
         return context
 
 

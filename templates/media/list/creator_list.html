@@ -5,7 +5,6 @@
 {% endblock %}
 
 {% block list_content %}
-
   <div class="d-flex flex-column gap-4 flex-md-row justify-content-center mb-3">
     <a href="{% url 'media:creator_create' %}?{{ query_params.urlencode }}"
        class="btn btn-outline-secondary mb-auto mx-2">
@@ -16,39 +15,53 @@
   {% include 'includes/media_filter.html' %}
 
   <div class="col-lg-10 text-center mx-auto">
-    <p class="text-lg mb-0 pt-2">{{ media|capfirst }} creators:</p>
+    <h4 class="text-primary">Choose
+      {% if media != "Series" %}{{ media }}s{% else %}{{ media }}{% endif %} whose creator is:</h4>
   </div>
 
-  {% for creator in creator_list %}
-    <div class="col-lg-10 text-center mx-auto">
-      <ul class="list-unstyled">
-        <li>
-          <h3 class="mb-1">
-            <a href="{{ redirect_url }}?creators={{ creator.first_name }}" class="text-primary text-gradient">{{ creator.first_name}} {{ creator.last_name }}</a>
-          </h3>
-          <p class="text-sm text-muted">
-            {{ creator.media_type_count }} result{{ creator.media_type_count|pluralize}}
-          </p>
-          <div class="pt-2">
-            <a class="btn btn-sm btn-outline-primary"
-               href="{% url 'media:creator_update' pk=creator.pk %}"
-            >
-              Edit
-            </a>
-            <a class="btn btn-sm btn-outline-danger"
-               data-bs-toggle="modal"
-               data-bs-target="#exampleModal">
-              Delete
-            </a>
-          </div>
-        </li>
-      </ul>
-    </div>
-    {% url 'media:creator_delete' pk=creator.pk as delete_url %}
-    {% include 'media/form/modal/media_delete_modal.html' with delete_url=delete_url name=creator.first_name %}
-  {% empty %}
+  {% if no_media_with_creator %}
+    {% for creator in creator_list %}
+      <div class="col-lg-10 text-center mx-auto">
+        <ul class="list-unstyled">
+          {% if creator.media_type_count %}
+            <li>
+              <h3 class="mb-1">
+                <a href="{{ redirect_url }}?creators={{ creator.first_name }}"
+                   class="text-primary text-gradient">{{ creator.first_name }} {{ creator.last_name }}</a>
+              </h3>
+              <p class="text-sm text-muted">
+                {{ creator.media_type_count }} result{{ creator.media_type_count|pluralize }}
+              </p>
+              <div class="pt-2">
+                <a class="btn btn-sm btn-outline-primary"
+                   href="{% url 'media:creator_update' pk=creator.pk %}"
+                >
+                  Edit
+                </a>
+                <a class="btn btn-sm btn-outline-danger"
+                   data-bs-toggle="modal"
+                   data-bs-target="#exampleModal">
+                  Delete
+                </a>
+              </div>
+            </li>
+          {% endif %}
+        </ul>
+      </div>
+      {% url 'media:creator_delete' pk=creator.pk as delete_url %}
+      {% include 'media/form/modal/media_delete_modal.html' with delete_url=delete_url name=creator.first_name %}
+    {% empty %}
+      <div class="col-lg-7 text-center mx-auto col-sm-9">
+        <p class="text-xs mb-0">Nothing to show yet</p>
+      </div>
+    {% endfor %}
+  {% else %}
     <div class="col-lg-7 text-center mx-auto col-sm-9">
-      <p class="text-xs mb-0">Nothing to show yet</p>
+      <div class="alert py-5 rounded shadow">
+        <h4 class="mb-3">Nothing to show yet</h4>
+        <p class="mb-0">Try adding new books or check your filters.</p>
+        <a href="{% url 'media:book_create' %}" class="btn btn-primary mt-3">Create a Book</a>
+      </div>
     </div>
-  {% endfor %}
+  {% endif %}
 {% endblock %}
