@@ -14,7 +14,14 @@
 {% endblock %}
 
 {% block media_content %}
-
+  <div class="d-flex flex-column gap-4 flex-md-row justify-content-center mb-3">
+    <h2 class="text-primary">Choose the
+      {% if query_params.type in type_choices %} {{ query_params.type|lower }}
+    {% else %}
+      series
+    {% endif %}
+      among the list</h2>
+  </div>
   <div class="mx-1 row g-4 justify-content-center">
     {% for series in series_list %}
       <div class="col-md-6 col-lg-4">
