@@ -50,7 +50,8 @@ class PrivateBookViewTests(TestCase):
         "Temple Grandin drew on her own experience with autism as well as her "
         "distinguished career as an animal scientist to deliver extraordinary "
         "insights into how animals think, act, and feel. Now she builds on "
-        "those insights to show us how to give our animals the best and happiest "
+        "those insights to show us how to give our animals "
+        "the best and happiest "
         "life on their terms, not ours."
     )
     BOOK_CREATED_AT = datetime.date(2009, 1, 6)
@@ -104,7 +105,8 @@ class PrivateBookViewTests(TestCase):
         self.assertNotEqual(list(response.context[self.BOOK_LIST]), [book])
 
         response = self.client.get(
-            f"{reverse(self.BOOK_LIST_URL_NAME)}?title=Harry+Potter+and+the+Philosopher's+Stone"
+            f"{reverse(self.BOOK_LIST_URL_NAME)}?title="
+            f"Harry+Potter+and+the+Philosopher's+Stone"
         )
         self.assertEqual(list(response.context[self.BOOK_LIST]), [book])
 
@@ -130,7 +132,8 @@ class PrivateBookViewTests(TestCase):
         self.assertEqual(list(response.context[self.BOOK_LIST]), [book])
 
         response = self.client.get(
-            f"{reverse(self.BOOK_LIST_URL_NAME)}?{CREATORS}={self.CREATOR_JOANNE}"
+            f"{reverse(self.BOOK_LIST_URL_NAME)}?"
+            f"{CREATORS}={self.CREATOR_JOANNE}"
         )
         self.assertEqual(list(response.context[self.BOOK_LIST]), [book])
 
@@ -166,11 +169,15 @@ class PrivateBookViewTests(TestCase):
         self.assertEqual(list(response.context[self.BOOK_LIST]), [book])
 
     def test_create_book(self):
-        response = self.client.post(reverse(self.BOOK_CREATE_URL_NAME), self.data)
+        response = self.client.post(
+            reverse(self.BOOK_CREATE_URL_NAME), self.data
+        )
         self.assertIsNotNone(response.context["form"].errors)
 
         self.data.update({GENRES: 1})
-        response = self.client.post(reverse(self.BOOK_CREATE_URL_NAME), self.data)
+        response = self.client.post(
+            reverse(self.BOOK_CREATE_URL_NAME), self.data
+        )
 
         self.assertEqual(response.status_code, 302)
         created_book = Book.objects.get(title=self.BOOK_TITLE)
@@ -258,18 +265,22 @@ class PrivateFilmViewTests(TestCase):
         self.assertEqual(response.status_code, 200)
 
         film = Film.objects.get(pk=1)
-        self.assertEqual(list(response.context[self.FILM_LIST]), [film])
+        self.assertEqual(
+            list(response.context[self.FILM_LIST]), [film]
+        )
 
     def test_film_list_search(self):
         response = self.client.get(
-            f"{reverse(self.FILM_LIST_URL_NAME)}?title={self.INVALID_TITLE_SEARCH}"
+            f"{reverse(self.FILM_LIST_URL_NAME)}"
+            f"?title={self.INVALID_TITLE_SEARCH}"
         )
         self.assertEqual(response.status_code, 200)
         film = Film.objects.get(pk=1)
         self.assertNotEqual(list(response.context[self.FILM_LIST]), [film])
 
         response = self.client.get(
-            f"{reverse(self.FILM_LIST_URL_NAME)}?title={self.VALID_TITLE_SEARCH}"
+            f"{reverse(self.FILM_LIST_URL_NAME)}"
+            f"?title={self.VALID_TITLE_SEARCH}"
         )
         self.assertEqual(list(response.context[self.FILM_LIST]), [film])
 
@@ -289,24 +300,33 @@ class PrivateFilmViewTests(TestCase):
         self.assertEqual(list(response.context[self.FILM_LIST]), [film])
 
         response = self.client.get(
-            f"{reverse(self.FILM_LIST_URL_NAME)}?{CREATORS}={self.CREATOR_VALID}"
+            f"{reverse(self.FILM_LIST_URL_NAME)}"
+            f"?{CREATORS}={self.CREATOR_VALID}"
         )
         self.assertEqual(list(response.context[self.FILM_LIST]), [film])
 
         response = self.client.get(
-            f"{reverse(self.FILM_LIST_URL_NAME)}?{GENRES}={self.GENRE_VALID}&{CREATORS}={self.CREATOR_VALID}"
+            f"{reverse(self.FILM_LIST_URL_NAME)}"
+            f"?{GENRES}={self.GENRE_VALID}"
+            f"&{CREATORS}={self.CREATOR_VALID}"
         )
-        self.assertEqual(list(response.context[self.FILM_LIST]), [film])
+        self.assertEqual(
+            list(response.context[self.FILM_LIST]), [film]
+        )
 
         response = self.client.get(
-            f"{reverse(self.FILM_LIST_URL_NAME)}?{GENRES}={self.GENRE_VALID}&{CREATORS}={self.CREATOR_INVALID}"
+            f"{reverse(self.FILM_LIST_URL_NAME)}"
+            f"?{GENRES}={self.GENRE_VALID}"
+            f"&{CREATORS}={self.CREATOR_INVALID}"
         )
         creators_form = response.context["creators_filter_form"]
         self.assertFalse(creators_form.is_valid())
         self.assertEqual(list(response.context[self.FILM_LIST]), [film])
 
         response = self.client.get(
-            f"{reverse(self.FILM_LIST_URL_NAME)}?{GENRES}={self.GENRE_INVALID}&{CREATORS}={self.CREATOR_VALID}"
+            f"{reverse(self.FILM_LIST_URL_NAME)}"
+            f"?{GENRES}={self.GENRE_INVALID}"
+            f"&{CREATORS}={self.CREATOR_VALID}"
         )
         genre_form = response.context["genre_filter_form"]
         self.assertFalse(genre_form.is_valid())
@@ -401,11 +421,18 @@ class PrivateSeriesViewTests(TestCase):
         new_series = Series(**self.data)
         new_series.save()
 
-        url = f"{reverse(self.URL_SERIES_LIST)}?{self.QUERY_PARAM_STATUS}={self.STATUS_FINISHED}"
+        url = (
+            f"{reverse(self.URL_SERIES_LIST)}"
+            f"?{self.QUERY_PARAM_STATUS}={self.STATUS_FINISHED}"
+        )
         response = self.client.get(url)
 
-        self.assertNotEqual(list(response.context[self.CONTEXT_SERIES_LIST]), [])
-        self.assertNotIn(new_series, response.context[self.CONTEXT_SERIES_LIST])
+        self.assertNotEqual(
+            list(response.context[self.CONTEXT_SERIES_LIST]), []
+        )
+        self.assertNotIn(
+            new_series, response.context[self.CONTEXT_SERIES_LIST]
+        )
 
     def test_context_set_correctly(self):
         expected_statuses = [
@@ -415,17 +442,25 @@ class PrivateSeriesViewTests(TestCase):
         ]
 
         response = self.client.get(reverse(self.URL_SERIES_LIST))
-        self.assertEqual(expected_statuses, response.context[self.CONTEXT_STATUS_CHOICES])
+        self.assertEqual(
+            expected_statuses,
+            response.context[self.CONTEXT_STATUS_CHOICES]
+        )
 
     def test_series_update_sets_status_and_type_correctly(self):
         url = reverse(self.URL_SERIES_UPDATE, kwargs={"pk": 2})
-        url += f"?{TYPE}={self.TYPE_ANIME}&{self.QUERY_PARAM_STATUS}={self.STATUS_FINISHED}"
+        url += (
+            f"?{TYPE}={self.TYPE_ANIME}"
+            f"&{self.QUERY_PARAM_STATUS}={self.STATUS_FINISHED}"
+        )
 
         response = self.client.get(url)
 
         form_initial = response.context[self.CONTEXT_FORM].initial
         self.assertEqual(self.TYPE_DB_VALUE, form_initial.get(TYPE))
-        self.assertEqual(self.STATUS_DB_VALUE, form_initial.get(self.QUERY_PARAM_STATUS))
+        self.assertEqual(
+            self.STATUS_DB_VALUE, form_initial.get(self.QUERY_PARAM_STATUS)
+        )
 
 
 class PrivateRatingViewTests(TestCase):
@@ -461,7 +496,7 @@ class PrivateRatingViewTests(TestCase):
             {
                 "rating": 5.0,
                 "media": 1
-             }
+            }
         )
         rating.refresh_from_db()
         self.assertRedirects(
@@ -501,7 +536,9 @@ class PrivateUserViewTests(TestCase):
         self.client.force_login(user)
 
     def test_user_search_filters_correctly(self):
-        response = self.client.get(f"{reverse('media:user_list')}?username=Tom")
+        response = self.client.get(
+            f"{reverse('media:user_list')}?username=Tom"
+        )
         all_users = UserMediaRating.objects.all()
 
         self.assertNotEqual(response.context[self.USER_LIST], all_users)
