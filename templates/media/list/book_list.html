@@ -13,7 +13,14 @@
 {% endblock %}
 
 {% block media_content %}'
-
+  <div class="d-flex flex-column gap-4 flex-md-row justify-content-center mb-3">
+  <h2 class="text-primary">Choose the
+    {% if query_params.type in type_choices %} {{ query_params.type|lower }}
+    {% else %}
+      book
+    {% endif %}
+    among the list</h2>
+  </div>
   <div class="mx-1 row g-4 justify-content-center">
     {% for book in book_list %}
       <div class="col-md-6 col-lg-4">
@@ -95,8 +102,12 @@
         </div>
       </div>
     {% empty %}
-      <div class="text-center mx-auto col-sm-9">
-        <p class="mb-0 h5">Nothing to show yet</p>
+      <div class="col-lg-7 text-center mx-auto col-sm-9">
+        <div class="alert py-5 rounded shadow">
+          <h4 class="mb-3">Nothing to show yet</h4>
+          <p class="mb-0">Try adding new books or check your filters.</p>
+          <a href="{% url 'media:book_create' %}" class="btn btn-primary mt-3">Create a Book</a>
+        </div>
       </div>
     {% endfor %}
 
