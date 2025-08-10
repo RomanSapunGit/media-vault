@@ -12,7 +12,10 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 import os
 from pathlib import Path
 from django.urls import reverse_lazy
+import environ
 
+env = environ.Env()
+environ.Env.read_env()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -20,8 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = ("django-insecure-d!z7!hh)4ly^*g#n(vapvlqs51onqs!o-b)"
-              "hqhs%j&v_!bpguy")
+SECRET_KEY = env("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -138,7 +140,6 @@ STATICFILES_DIRS = [BASE_DIR / "static", ]
 LOGIN_URL = reverse_lazy("authentication:login")
 LOGIN_REDIRECT_URL = reverse_lazy("media:index")
 LOGOUT_REDIRECT_URL = LOGIN_URL
-
 
 INTERNAL_IPS = [
     # ...
