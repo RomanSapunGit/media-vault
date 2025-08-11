@@ -1,50 +1,14 @@
-# media-vault — README
-
-**A media collection and discovery app, built with Django.**
+![Logo of the project](static/assets/img/icons/favicon.png)
+# media-vault
 
 `media-vault` is a web application that allows users to catalog and manage media—such as films, books, and series—through adding titles, filtering by genre, creator, and status, rating items, and exploring lists. It includes dynamic features like AJAX-powered modals for quickly creating creators, and context-aware redirects that enhance the user experience.
 
----
+## Installing / Getting started
 
-## Table of Contents
+A quick introduction of the minimal setup you need to get an app up &
+running.
 
-- [Project Overview](#project-overview)  
-- [What the App Does](#what-the-app-does)  
-- [Quick Start (Development)](#quick-start-development)  
-- [Running Tests & Measuring Coverage](#running-tests--measuring-coverage)  
-- [AJAX & Modal Behavior](#ajax--modal-behavior)
-- [License & Contact](#license--contact)  
-- [Database diagram](#database-diagram)
-- [screenshots](#screenshots)
-
----
-
-## Project Overview
-
-`media-vault` is a Django-powered media library that helps users organize and share their media collections. It provides:
-
-- Django models for media items, creators, genres, and user ratings.  
-- List, create, update, and delete views for media, creators, and ratings.  
-- Filtering functionality based on title, genre, creator, status, and type.  
-- AJAX modals for adding new creators without leaving the form.  
-- Form handling that supports both traditional and AJAX submissions.  
-- Thorough test coverage and fixtures for sample data development.  
-
----
-
-## What the App Does
-
-- **Catalog media** — Users can add films, books, and series, with metadata such as creators, genres, types, and status.  
-- **Filter and search** — Users can filter media lists by creator, genre, and status or search by title.  
-- **Rate media** — Users can provide ratings, and media lists display aggregated averages.  
-- **Create creators via modal** — In-place modals let users add new creators while filling out media forms.  
-- **Smart redirects** — Views redirect users either to the creator list, detail view, or specified `next` page depending on context.  
-
----
-
-## Quick Start (Development)
-
-```
+```shell
 1. git clone https://github.com/RomanSapunGit/media-vault.git
 2. cd media-vault
 3. python -3.10 -m venv .venv
@@ -57,30 +21,103 @@
 9. Navigate to local server with your specific port to explore (example: http://127.0.0.1:8000/)
 ```
 
-## Running Tests & Measuring Coverage
+It should install necessary libraries, set up venv, migrations and run server.
 
-### Using Django Test Runner
-`python manage.py test`
+## Developing
+
+Here's a brief intro about what a developer must do in order to start developing
+the project further:
+
+```shell
+git clone https://github.com/RomanSapunGit/media-vault.git
+cd media-vault/
+```
+
+And state what happens step-by-step.
+
+### Building
+
+No explicit build step is required for `media-vault` because it’s a Django web app.
+
+## Features
+
+`media-vault` offers a full suite of tools for managing and exploring personal media collections:
+
+- **Catalog media** — Add films, books, and series with detailed metadata (title, creator, genre, type, status).  
+- **Filter and search** — Quickly find items by title, creator, genre, type, or completion status.  
+- **Rate media** — Provide ratings, view aggregated averages.  
+- **Create creators via modal** — Add new creators directly from media forms using AJAX-powered modals without leaving the page.  
+- **Smart redirects** — Context-aware navigation that returns you to the right place after creating or editing an item.  
+- **Sample data** — Built-in fixtures for quick local testing and demonstration of the app.  
+- **Fully tested** — Unit tests for views, models, and forms ensure stability and easy maintenance. 
+
+## Configuration
+
+Before running `media-vault`, you can adjust the application’s behavior through environment variables and Django settings.
+
+### Environment Variables
+
+These can be set in a `.env` file or in your shell before starting the server:
+
+
+#### `SECRET_KEY`
+Type: String  
+Default: `django-insecure-d!z7!hh)4ly^*g#n(vapvlqs51onqs!o-b)hqhs%j&v_!bpguy`
+
+Django secret key. **Must be set for production**
+
+## Contributing
+
+Contributions are warmly welcome! Whether you’ve found a bug, have an idea for a feature, or want to improve the documentation, your help is appreciated.
+
+If you’d like to contribute:
+
+1. **Fork** the repository.
+2. **Create** a new feature branch:  
+   ```shell
+   git checkout -b feature/your-feature-name
+   ```
+3. **Commit** your changes:  
+   ```shell
+   git commit -m "Add(scope): short description of changes"
+   ```
+4. **Push** to your branch:  
+   ```shell
+   git push origin feature/your-feature-name
+   ```
+5. **Open a Pull Request** describing your changes and their purpose.
+
+### Code Style Guidelines
+- Follow [PEP 8](https://peps.python.org/pep-0008/) for Python code.
+- Write descriptive commit messages (e.g., `Fix(user register): adjust modal form validation`).
+- Add or update tests for any changes in functionality.
+- Run the test suite before submitting your PR:  
+  ```shell
+  python manage.py test
+  ```
+
+If you plan to make significant changes, please open an **issue** first to discuss your ideas.
 
 ### Measuring Coverage
+
+To see what parts of code are covered by tests you can use [coverage](https://coverage.readthedocs.io/en/7.10.3/) library:
 ```
 coverage run --source='.' manage.py test or coverage run manage.py test
 coverage report
 coverage html 
 ```
 
-## AJAX & Modal Behavior
-**CreatorCreateView** supports both standard and AJAX submissions:
+## Links & Screenshots
 
-- **Normal POST**: redirects to creator_list.
+- **Project homepage:** *No homepage yet!*
+- **Repository:** [https://github.com/RomanSapunGit/media-vault](https://github.com/RomanSapunGit/media-vault)
+- **Issue tracker:** [https://github.com/RomanSapunGit/media-vault/issues](https://github.com/RomanSapunGit/media-vault/issues)  
+  - For sensitive bugs such as security vulnerabilities, please contact **teg481275@gmail.com** directly instead of using the public issue tracker.  
+    We value your effort to improve the security and privacy of this project!
+- **Related projects:**
+  - *None listed yet — feel free to suggest related tools or integrations!*
 
-- **AJAX POST** (with X-Requested-With: XMLHttpRequest header): returns JSON — { success: true, author: { id, name } } or { success: false, form_html }.
-
-The frontend JS captures this JSON to dynamically update forms without a full reload.
-
-## License & Contact
-No license file is currently included.
-For clarification or contributions, please contact the repository owner via GitHub: RomanSapunGit/media-vault.
+### Screenshots
 
 ## Database diagram
 <details>
@@ -215,3 +252,8 @@ For clarification or contributions, please contact the repository owner via GitH
 
 ![img.png](images/create_author_modal.png)
 </details> 
+
+## Licensing
+
+No license file is currently included.
+For clarification or contributions, please contact the repository owner via GitHub: RomanSapunGit/media-vault.
