@@ -3,6 +3,13 @@
 
 `media-vault` is a web application that allows users to catalog and manage media—such as films, books, and series—through adding titles, filtering by genre, creator, and status, rating items, and exploring lists. It includes dynamic features like AJAX-powered modals for quickly creating creators, and context-aware redirects that enhance the user experience.
 
+### _[live site](https://media-vault-lv9u.onrender.com/)_
+
+## Test User Credentials
+You can log in to the application using the following test account:
+- **login**: user
+- **password**: user12345
+
 ## Installing / Getting started
 
 A quick introduction of the minimal setup you need to get an app up &
